@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TalkAbout.View;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +26,12 @@ namespace TalkAbout
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            root.Navigate(typeof(Settings));
         }
     }
 }
