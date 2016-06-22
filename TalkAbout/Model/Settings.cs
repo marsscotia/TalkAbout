@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -304,6 +305,7 @@ namespace TalkAbout.Model
             if (voiceId != null)
             {
                 string voiceIdString = (string)voiceId;
+                Debug.WriteLine("Settings.cs: Voice id loaded from roaming settings is: " + voiceIdString);
                 foreach(VoiceInformation voice in SpeechSynthesizer.AllVoices)
                 {
                     if (voice.Id.Equals(voiceIdString))
@@ -315,7 +317,8 @@ namespace TalkAbout.Model
             }
             if (!found)
             {
-                _voice = SpeechSynthesizer.DefaultVoice;
+                _voice = SpeechSynthesizer.AllVoices.FirstOrDefault();
+                Debug.WriteLine("Settings.cs: Voice id loaded from default is: " + _voice.Id);
             }
 
         }

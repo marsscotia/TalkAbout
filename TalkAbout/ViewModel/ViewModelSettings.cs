@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace TalkAbout.ViewModel
     /// Class provides a view model for a settings view.
     /// 
     /// </summary>
-    class ViewModelSettings: BindableBase
+    public class ViewModelSettings: BindableBase
     {
         private Settings _settings;
         private List<VoiceInformation> _voices;
@@ -164,6 +165,39 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public string VoiceId
+        {
+            get
+            {
+                return _voice.Id;
+            }
+            set
+            {
+                Voice = (from VoiceInformation voice in SpeechSynthesizer.AllVoices
+                         where voice.Id == value
+                         select voice).DefaultIfEmpty(SpeechSynthesizer.DefaultVoice).First();
+
+
+            }
+        }
+
+        public List<VoiceInformation> Voices
+        {
+            get
+            {
+                return _voices;
+            }
+        }
+
+        public List<int> FontSizes
+        {
+            get
+            {
+                return _fontSizes;
+            }
+        }
+
+
         public ViewModelSettings()
         {
             _settings = Settings.Instance;
@@ -180,6 +214,8 @@ namespace TalkAbout.ViewModel
             _showSorting = _settings.ShowSorting;
             _fontSize = _settings.FontSize;
             _voice = _settings.SettingsVoice;
+
+            
         }
 
 

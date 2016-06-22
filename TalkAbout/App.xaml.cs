@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,6 +23,9 @@ namespace TalkAbout
     /// </summary>
     sealed partial class App : Application
     {
+        
+        
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -79,6 +83,23 @@ namespace TalkAbout
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+            }
+
+            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
+        }
+
+        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            if (root == null)
+            {
+                return;
+            }
+
+            if(root.CanGoBack && e.Handled == false)
+            {
+                e.Handled = true;
+                root.GoBack();
             }
         }
 
