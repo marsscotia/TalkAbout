@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TalkAbout"
     xmlns:triggers="using:TalkAbout.Triggers"
+    xmlns:views="using:TalkAbout.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
@@ -25,6 +26,9 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <RelativePanel HorizontalAlignment="Stretch">
+            <Button RelativePanel.Below="CommandBar">
+                <views:ShortcutPanel CommandLabel="Speak" CommandShortcut="Enter" SymbolText=""/>
+            </Button>
             <CommandBar x:Name="CommandBar" 
                         RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="False">
                 <AppBarButton Icon="Setting" Label="Settings" Click="AppBarButton_Click" />
