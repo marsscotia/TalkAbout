@@ -21,7 +21,7 @@
         <TextBlock x:Name="Label" HorizontalAlignment="Center" Text="{Binding ElementName=ThisShortcutPanel, Path=CommandLabel}"
                    Style="{StaticResource BodyTextBlockStyle}"
                    RelativePanel.Above="Shortcut" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
-        <TextBlock x:Name="Icon" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ElementName=ThisShortcutPanel, Path=SymbolText}"
+        <TextBlock x:Name="Icon" HorizontalAlignment="Center" VerticalAlignment="Stretch" Text="{Binding ElementName=ThisShortcutPanel, Path=SymbolText}"
                    Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Segoe MDL2 Assets"
                    RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Label" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
     </RelativePanel>

@@ -7,12 +7,14 @@
     xmlns:views="using:TalkAbout.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    
     mc:Ignorable="d">
 
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        
+        <!-- Visual states for adaptive layout -->
         <VisualStateManager.VisualStateGroups>
+            <!-- Visual states based on device family -->
             <VisualStateGroup x:Name="DeviceFamilyStates">
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -20,19 +22,80 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="CommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True" />
-                        <Setter Target="CommandBar.(RelativePanel.AlignTopWithPanel)" Value="False" />
+                        <Setter Target="ContentPanel.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                        <Setter Target="ContentPanel.(RelativePanel.Above)" Value="CommandBar" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <triggers:DeviceFamilyTrigger DeviceFamily="Windows.Desktop" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CommandBar.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                        <Setter Target="ContentPanel.(RelativePanel.Below)" Value="CommandBar" />
+                        <Setter Target="ContentPanel.(RelativePanel.AlignBottomWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <!-- Visual states based on screen width -->
+            <VisualStateGroup x:Name="ScreenSizeStates">
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MessagePanel.(RelativePanel.AlignBottomWithPanel)" Value="True" />
+                        <Setter Target="PhrasesPanel.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow" >
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MessagePanel.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="MessagePanel.Height" Value="Auto" />
+                        <Setter Target="PhrasesPanel.(RelativePanel.Below)" Value="MessagePanel" />
+                        <Setter Target="PhrasesPanel.(RelativePanel.AlignLeftWithPanel)" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <RelativePanel HorizontalAlignment="Stretch">
-            <Button RelativePanel.Below="CommandBar">
-                <views:ShortcutPanel CommandLabel="Speak" CommandShortcut="Enter" SymbolText=""/>
-            </Button>
-            <CommandBar x:Name="CommandBar" 
-                        RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="False">
-                <AppBarButton Icon="Setting" Label="Settings" Click="AppBarButton_Click" />
-            </CommandBar>
+
+        <CommandBar x:Name="CommandBar" 
+                        RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" >
+            <AppBarButton Icon="Setting" Label="Settings" Click="AppBarButton_Click" />
+        </CommandBar>
+        
+        <RelativePanel x:Name="ContentPanel" 
+                       RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
+            
+            <RelativePanel x:Name="MessagePanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" >
+                <TextBox x:Name="MessageWindow" 
+                         RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" 
+                         RelativePanel.Above="MessageControlsPanel" />
+                <StackPanel x:Name="MessageControlsPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
+                            Orientation="Horizontal" >
+                    <Button x:Name="SpeakButton" >
+                        <views:ShortcutPanel CommandLabel="Speak" CommandShortcut="Enter" SymbolText="" />
+                    </Button>
+                    <Button x:Name="DeleteWord" >
+                        <views:ShortcutPanel CommandLabel="Delete Word" CommandShortcut="Ctrl + W" SymbolText="" />
+                    </Button>
+                    <Button x:Name="Clear" >
+                        <views:ShortcutPanel CommandLabel="Clear" CommandShortcut="Ctrl + N" SymbolText="" />
+                    </Button>
+                    <Button x:Name="Save" >
+                        <views:ShortcutPanel CommandLabel="Save" CommandShortcut="Ctrl + S" SymbolText="" />
+                    </Button>
+                </StackPanel>
+            </RelativePanel>
+
+            <RelativePanel x:Name="PhrasesPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
+            
+            </RelativePanel>
+
         </RelativePanel>
-    </Grid>
+
+    </RelativePanel>
 </Page>
