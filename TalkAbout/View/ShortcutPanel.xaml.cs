@@ -29,6 +29,9 @@ namespace TalkAbout.View
         public static readonly DependencyProperty SymbolTextProperty =
             DependencyProperty.Register("SymbolText", typeof(string), typeof(ShortcutPanel), null);
 
+        public static readonly DependencyProperty PlainTextProperty =
+            DependencyProperty.Register("PlainText", typeof(string), typeof(ShortcutPanel), null);
+
         public string CommandLabel
         {
             get
@@ -63,6 +66,18 @@ namespace TalkAbout.View
             set
             {
                 SetValue(SymbolTextProperty, value);
+            }
+        }
+
+        public string PlainText
+        {
+            get
+            {
+                return (string)GetValue(PlainTextProperty);
+            }
+            set
+            {
+                SetValue(PlainTextProperty, value);
             }
         }
 

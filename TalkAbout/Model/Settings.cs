@@ -19,7 +19,7 @@ namespace TalkAbout.Model
     /// A user can adjust the settings via the Settings.xaml page.
     /// 
     /// </summary>
-    class Settings
+    public class Settings
     {
 
 

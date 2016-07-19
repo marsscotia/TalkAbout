@@ -95,10 +95,21 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\SetFocusAction.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanHiddenConverter.cs" />
+    <Compile Include="Data\FileAccessor.cs" />
+    <Compile Include="Data\JsonConverter.cs" />
+    <Compile Include="Model\Abbreviation.cs" />
+    <Compile Include="Model\Abbreviations.cs" />
+    <Compile Include="Model\Categories.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Phrase.cs" />
+    <Compile Include="ViewModel\ITaskCompleteNotifier.cs" />
+    <Compile Include="ViewModel\TaskNotifier.cs" />
+    <Compile Include="ViewModel\ViewModelChat.cs" />
     <Compile Include="View\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>

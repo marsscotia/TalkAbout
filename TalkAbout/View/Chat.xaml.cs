@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TalkAbout.View;
+using TalkAbout.ViewModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,6 +27,18 @@ namespace TalkAbout
         public MainPage()
         {
             this.InitializeComponent();
+            _viewModel = new ViewModelChat();
+            ChatPage.DataContext = ViewModel;
+        }
+
+        private ViewModelChat _viewModel;
+
+        public ViewModelChat ViewModel
+        {
+            get
+            {
+                return _viewModel;
+            }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
