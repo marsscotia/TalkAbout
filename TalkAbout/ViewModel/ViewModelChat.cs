@@ -17,6 +17,7 @@ namespace TalkAbout.ViewModel
         private bool _showSortedPhrasesList;
         private bool _showCategoryList;
         private bool _showError;
+        private bool _selectionMode;
         private string _newCategory;
         private string _message;
         private string _error;
@@ -24,6 +25,8 @@ namespace TalkAbout.ViewModel
         private ObservableCollection<IGrouping<Category,Phrase>> _phrases;
         private ObservableCollection<Category> _categoryList;
         private Category _selectedCategory;
+        private IList<Phrase> _selectedPhrases;
+        private RelayCommand<IList<object>> _deletePhrasesCommand;
 
         private int _mode;
         
@@ -31,11 +34,11 @@ namespace TalkAbout.ViewModel
         private const int _saveMode = 2;
 
         private const string _phraseAlreadyExists = "That phrase already exists.";
-        private const string _categoryNotFound = "The selected category couldn't be found.  Try Selecting another.";
+        private const string _categoryNotFound = "The selected category couldn't be found.  Try selecting another.";
         private const string _messageEmpty = "The message is empty! Try typing something then saving it.";
         private const string _categoryEmpty = "The new category needs a name!  Try typing a name and then saving the phrase.";
 
-
+        #region Properties
         /// <summary>
         /// 
         /// Property exposes application settings.
@@ -107,6 +110,7 @@ namespace TalkAbout.ViewModel
             set
             {
                 SetProperty(ref _showCategoryList, value);
+                OnPropertyChanged("SelectionModeEnabled");
             }
         }
 
@@ -217,7 +221,63 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        /// <summary>
+        /// Property defines font size for headers, as 2 more
+        /// than font size set in Settings.
+        /// </summary>
+        public int HeaderFontSize
+        {
+            get
+            {
+                return Settings.FontSize + 2;
+            }
+        }
 
+        /// <summary>
+        /// Property determines whether selection mode is switched on;
+        /// that is, whether multiple phrases can be selected to be deleted.
+        /// </summary>
+        public bool SelectionMode
+        {
+            get
+            {
+                return _selectionMode;
+            }
+            set
+            {
+                SetProperty(ref _selectionMode, value);
+            }
+        }
+
+        public IList<Phrase> SelectedPhrases
+        {
+            set
+            {
+                SetProperty(ref _selectedPhrases, value);
+            }
+        }
+
+        public bool SelectionModeEnabled
+        {
+            get
+            {
+                return !ShowCategoryList;
+            }
+        }
+
+        public RelayCommand<IList<object>> DeletePhrasesCommand
+        {
+            get
+            {
+                return new RelayCommand<IList<object>>(DeletePhrases);
+            }
+        }
+         
+
+        #endregion Properties
+
+
+        #region Constructor
         public ViewModelChat()
         {
             _categories = Categories.Instance;
@@ -227,6 +287,7 @@ namespace TalkAbout.ViewModel
             _loadPhrases();
         }
 
+        #endregion Constructor 
 
         /// <summary>
         /// Switches the app to save phrase mode.
@@ -252,6 +313,7 @@ namespace TalkAbout.ViewModel
             ShowNewCategoryPanel = false;
             ShowCategoryList = false;
             ShowPhrasesList = true;
+            SelectionMode = false;
             NewCategory = "";
         }
 
@@ -341,6 +403,30 @@ namespace TalkAbout.ViewModel
                         break;
                     }
                     
+            }
+        }
+
+        public void ToggleSelectionMode()
+        {
+
+            SelectionMode = !SelectionMode;
+            Debug.WriteLine("ViewModelChat.cs: Selection Mode is " + SelectionMode.ToString());
+        }
+
+        public void DeletePhrases(IList<object> selectedPhrases)
+        {
+            if (SelectionMode)
+            {
+                if (selectedPhrases.Count() > 0)
+                {
+                    List<Phrase> selectedList = new List<Phrase>();
+                    foreach (var item in selectedPhrases)
+                    {
+                        selectedList.Add((Phrase)item);
+                    }
+                    _categories.DeletePhrases(selectedList);
+                    OnPropertyChanged("Phrases");
+                }
             }
         }
 

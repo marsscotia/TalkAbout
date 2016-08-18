@@ -10,6 +10,7 @@
     xmlns:interaction="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:behaviours="using:TalkAbout.Behaviours"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -25,6 +26,9 @@
             <Setter Property="Margin" Value="0, 10, 0, 0" />
         </Style>
         <converters:BooleanHiddenConverter x:Key="BooleanVisibilityConverter" />
+        <converters:InverseBooleanHiddenConverter x:Key="BooleanHiddenConverter" />
+        <converters:BooleanSelectionModeConverter x:Key="SelectionModeConverter" />
+        <converters:ListViewSelectedItemsConverter x:Key="SelectedItemsConverter" />
         <Storyboard x:Name="NewCategoryPanelAppear">
             <DoubleAnimation Storyboard.TargetName="NewCategoryPanel" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
         </Storyboard>
@@ -32,9 +36,24 @@
                               Source="{Binding Phrases}" d:Source="{Binding Phrases}"/>
     </Page.Resources>
 
+
     
+
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        
+
+        <!-- Behaviours and Actions for Keyboard Shortcuts -->
+        <interaction:Interaction.Behaviors>
+            <behaviours:KeyUpBehaviour Key="B" AndControl="True">
+                <core:ChangePropertyAction TargetObject="{Binding ElementName=PhrasesList}" PropertyName="IsZoomedInViewActive" Value="false" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="PageUp">
+                <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Up="true" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="PageDown">
+                <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Down="True" />
+            </behaviours:KeyUpBehaviour>
+        </interaction:Interaction.Behaviors>
+
         <!-- Visual states for adaptive layout -->
         <VisualStateManager.VisualStateGroups>
             <!-- Visual states based on device family -->
@@ -122,12 +141,15 @@
                         RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" >
             <AppBarButton Icon="Setting" Label="Settings" Click="AppBarButton_Click" />
         </CommandBar>
+
         
+
         <RelativePanel x:Name="ContentPanel" 
                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
 
             
             
+            <!-- MessagePanel: Contains message text box and functions-->
             <RelativePanel x:Name="MessagePanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" >
                 <TextBox x:Name="MessageWindow" Margin="0, 10, 0, 10" 
                 RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" 
@@ -159,17 +181,13 @@
                 </StackPanel>
             </RelativePanel>
 
-            <RelativePanel x:Name="ErrorPanel" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
-                           RelativePanel.AlignRightWithPanel="True" Visibility="{Binding ShowError, Converter={StaticResource BooleanVisibilityConverter}}"
-                           Background="Red">
-                <TextBlock x:Name="ErrorText" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="0, 4, 0, 0" Text="{Binding Error, Mode=OneWay}" FontSize="{Binding Settings.FontSize}"
-                           Foreground="White"/>
-            </RelativePanel>
             
+            <!-- PhrasesPanel: contains listviews and functions -->
             <RelativePanel x:Name="PhrasesPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
                 
                 <Button x:Name="SelectionModeButton" Style="{StaticResource CommandButtonStyle}" 
-                        RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                        RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" 
+                        IsEnabled="{x:Bind ViewModel.SelectionModeEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ToggleSelectionMode}">
                     <views:ShortcutPanel CommandShortcut="Ctrl + l" SymbolText="" />
                 </Button>
 
@@ -197,6 +215,7 @@
                     <views:ShortcutPanel CommandShortcut="Ctrl + f" PlainText="1-3" />
                 </Button>
 
+                <!-- NewCategoryPanel: contains textbox and functions for creating new category -->
                 <RelativePanel x:Name="NewCategoryPanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" 
                                RelativePanel.LeftOf="CategorySortButton" Visibility="{x:Bind ViewModel.ShowNewCategoryPanel, Converter={StaticResource BooleanVisibilityConverter}, Mode=OneWay}">
 
@@ -228,25 +247,43 @@
                 </RelativePanel>
 
                 <Button x:Name="DeletePhrasesButton" Style="{StaticResource CommandButtonStyle}"
-                        RelativePanel.LeftOf="SelectionModeButton" RelativePanel.AlignBottomWithPanel="True">
+                        RelativePanel.LeftOf="SelectionModeButton" RelativePanel.AlignBottomWithPanel="True"
+                        Visibility="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding DeletePhrasesCommand}" CommandParameter="{Binding ElementName=ZoomedInList, Converter={StaticResource SelectedItemsConverter}}">
                     <views:ShortcutPanel CommandShortcut="Delete" SymbolText="" />
                 </Button>
 
+                <!-- NavigationPanel: contains functions for navigating lists -->
                 <RelativePanel x:Name="NavigationPanel" 
                                RelativePanel.AlignLeftWithPanel="True" 
                                Visibility="{x:Bind ViewModel.Settings.ShowNavigation, Converter={StaticResource BooleanVisibilityConverter}}">
                     <Button x:Name="DownButton" Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                        <interaction:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Click">
+                                <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Down="true" />
+                            </core:EventTriggerBehavior>
+                        </interaction:Interaction.Behaviors>
                         <views:ShortcutPanel CommandShortcut="PgDn" SymbolText="" />
                     </Button>
 
                     <Button x:Name="UpButton" Style="{StaticResource CommandButtonStyle}" 
                         RelativePanel.RightOf="DownButton" RelativePanel.AlignBottomWithPanel="True">
+                        <interaction:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Click">
+                                <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Up="true" />
+                            </core:EventTriggerBehavior>
+                        </interaction:Interaction.Behaviors>
                         <views:ShortcutPanel CommandShortcut="PgUp" SymbolText="" />
                     </Button>
 
                     <Button x:Name="BackButton" Style="{StaticResource CommandButtonStyle}" 
                         RelativePanel.RightOf="UpButton" RelativePanel.AlignBottomWithPanel="True">
+                        <interaction:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Click">
+                                <core:ChangePropertyAction TargetObject="{Binding ElementName=PhrasesList}" PropertyName="IsZoomedInViewActive" Value="false" />
+                            </core:EventTriggerBehavior>
+                        </interaction:Interaction.Behaviors>
                         <views:ShortcutPanel CommandShortcut="Ctrl + b" SymbolText="" />
                     </Button>
                 </RelativePanel>
@@ -254,16 +291,21 @@
                 
                 
 
-                <SemanticZoom x:Name="PhrasesList" Visibility="{Binding ShowPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
-                              RelativePanel.LeftOf="CategorySortButton" RelativePanel.AlignLeftWithPanel="True"
+                <SemanticZoom x:Name="PhrasesList" 
+                              Visibility="{Binding ShowPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
+                              RelativePanel.LeftOf="CategorySortButton" 
+                              RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.Below="NewCategoryPanel"
                               Margin="0, 10, 10, 0">
                     <SemanticZoom.ZoomedInView>
-                        <ListView ItemsSource="{Binding Source={StaticResource PhrasesViewSource}}">
+                        <ListView x:Name="ZoomedInList" 
+                            ItemsSource="{Binding Source={StaticResource PhrasesViewSource}}"
+                            SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource SelectionModeConverter}}">
                             <ListView.ItemTemplate>
                                 <DataTemplate >
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" 
+                                                   TextWrapping="Wrap" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -310,6 +352,14 @@
                     </ListView.ItemTemplate>
                 </ListView>
                     
+            </RelativePanel>
+
+            <!-- ErrorPanel: a panel for displaying error messages to users -->
+            <RelativePanel x:Name="ErrorPanel" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
+                           RelativePanel.AlignRightWithPanel="True" Visibility="{Binding ShowError, Converter={StaticResource BooleanVisibilityConverter}}"
+                           Background="Red" Padding="5">
+                <TextBlock x:Name="ErrorText" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="0, 4, 0, 0" Text="{Binding Error, Mode=OneWay}" FontSize="{Binding Settings.FontSize}"
+                           Foreground="White"/>
             </RelativePanel>
 
         </RelativePanel>
