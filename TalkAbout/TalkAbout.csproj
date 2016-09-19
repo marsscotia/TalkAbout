@@ -112,10 +112,19 @@
     <Compile Include="Model\Categories.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Phrase.cs" />
+    <Compile Include="Model\Pronunciation.cs" />
+    <Compile Include="Model\Pronunciations.cs" />
+    <Compile Include="ViewModel\Command.cs" />
     <Compile Include="ViewModel\ITaskCompleteNotifier.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\TaskNotifier.cs" />
+    <Compile Include="ViewModel\ViewModelAbbreviations.cs" />
     <Compile Include="ViewModel\ViewModelChat.cs" />
+    <Compile Include="ViewModel\ViewModelPhrase.cs" />
+    <Compile Include="ViewModel\ViewModelPronunciations.cs" />
+    <Compile Include="View\Abbreviations.xaml.cs">
+      <DependentUpon>Abbreviations.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
@@ -124,6 +133,9 @@
     <Compile Include="Triggers\DeviceFamilyTrigger.cs" />
     <Compile Include="ViewModel\BindableBase.cs" />
     <Compile Include="ViewModel\ViewModelSettings.cs" />
+    <Compile Include="View\Pronunciations.xaml.cs">
+      <DependentUpon>Pronunciations.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -135,6 +147,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
     <None Include="TalkAbout_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -152,9 +165,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\Abbreviations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Chat.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Pronunciations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Settings.xaml">
       <SubType>Designer</SubType>
@@ -163,6 +184,11 @@
     <Page Include="View\ShortcutPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StyleDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <ItemGroup />

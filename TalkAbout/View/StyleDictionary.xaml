@@ -1,0 +1,65 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TalkAbout.View"
+    xmlns:model="using:TalkAbout.Model"
+    xmlns:converters="using:TalkAbout.Converters"
+    xmlns:viewmodel="using:TalkAbout.ViewModel">
+    <Style  x:Key="CommandButtonStyle" TargetType="Button" >
+        <Setter Property="Margin" Value="0, 10, 10, 0" />
+        <Setter Property="Height" Value="80" />
+        <Setter Property="Width" Value="80" />
+    </Style>
+    <Style x:Key="EndCommandButtonStyle" TargetType="Button" BasedOn="{StaticResource CommandButtonStyle}" >
+        <Setter Property="Margin" Value="0, 10, 0, 0" />
+    </Style>
+    <Style x:Key="LabelStyle" TargetType="TextBlock" >
+        <Setter Property="Margin" Value="0, 10, 0, 5" />
+    </Style>
+    <Style x:Key="ItemLabelStyle" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0, 0, 0, 4" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="FontSize" Value="{Binding FontSize, Source={StaticResource Settings}}" />
+    </Style>
+
+    <viewmodel:ViewModelSettings x:Key="Settings" />
+
+    <converters:BooleanHiddenConverter x:Key="BooleanVisibilityConverter" />
+    <converters:InverseBooleanHiddenConverter x:Key="BooleanHiddenConverter" />
+    <converters:BooleanSelectionModeConverter x:Key="SelectionModeConverter" />
+    <converters:ListViewSelectedItemsConverter x:Key="SelectedItemsConverter" />
+
+    <DataTemplate x:Key="AbbreviationDataTemplate">
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Uid="AbbreviationItemCodeLabel"
+                       Style="{StaticResource ItemLabelStyle}"
+            />
+            <TextBlock Text="{Binding Shortcut}"
+                       Margin="4, 0, 0, 8"
+                       FontSize="{Binding FontSize, Source={StaticResource Settings}}"
+                       />
+            <TextBlock x:Uid="AbbreviationItemPhraseLabel"
+                       Style="{StaticResource ItemLabelStyle}"/>
+            <TextBlock Text="{Binding Expansion}" 
+                       Margin="4, 0, 0, 16"
+                       FontSize="{Binding FontSize, Source={StaticResource Settings}}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PronunciationDataTemplate">
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Uid="PronunciationItemWordLabel"
+                       Style="{StaticResource ItemLabelStyle}" />
+            <TextBlock Text="{Binding Word}"
+                       Margin="4, 0, 0, 8"
+                       FontSize="{Binding FontSize, Source={StaticResource Settings}}"/>
+            <TextBlock x:Uid="PronunciationItemSoundLabel" 
+                       Style="{StaticResource ItemLabelStyle}" />
+            <TextBlock Text="{Binding Sound}"
+                       Margin="4, 0, 0, 16"
+                       FontSize="{Binding FontSize,Source={StaticResource Settings}}" />
+        </StackPanel>
+    </DataTemplate>
+    
+</ResourceDictionary>

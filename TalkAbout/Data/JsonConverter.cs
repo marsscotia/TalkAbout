@@ -31,6 +31,11 @@ namespace TalkAbout.Data
         private const string _shortcutString = "shortcut";
         private const string _expansionString = "expansion";
 
+        //strings for pronunciation json values
+        private const string _pronunciationsString = "pronunciations";
+        private const string _wordString = "word";
+        private const string _soundString = "sound";
+
         public JsonConverter()
         {
             _accessor = new FileAccessor();
@@ -124,13 +129,16 @@ namespace TalkAbout.Data
             bool success = JsonObject.TryParse(jsonString, out abbreviationsObject);
             if (success)
             {
+                Debug.WriteLine("JsonConverter.cs: abbreviations jsonString successfully parsed");
                 JsonArray abbreviationsArray = abbreviationsObject.GetNamedArray(_abbreviationsString);
-                foreach (JsonObject abbreviationObject in abbreviationsArray)
+                for (int i = 0; i < abbreviationsArray.Count(); i++)
                 {
+                    JsonObject abbreviationObject = abbreviationsArray[i].GetObject();
                     string shortcut = abbreviationObject.GetNamedString(_shortcutString);
                     string expansion = abbreviationObject.GetNamedString(_expansionString);
                     result.Add(new Abbreviation(shortcut, expansion));
                 }
+                Debug.WriteLine("JsonConverter.cs: List has " + result.Count + " abbreviations.");
             }
             return result;
         }
@@ -150,6 +158,47 @@ namespace TalkAbout.Data
 
             abbreviationsObject[_abbreviationsString] = abbreviationsArray;
             string jsonString = abbreviationsObject.Stringify();
+
+            _accessor.writeJsonFile(filename, jsonString);
+        }
+
+        public async Task<List<Pronunciation>> GetPronunciations(string filename)
+        {
+            List<Pronunciation> result = new List<Pronunciation>();
+            JsonObject pronunicationsObject = new JsonObject();
+
+            string jsonString = await _accessor.getJsonString(filename);
+            bool success = JsonObject.TryParse(jsonString, out pronunicationsObject);
+            if (success)
+            {
+                JsonArray pronunciationsArray = pronunicationsObject.GetNamedArray(_pronunciationsString);
+                for (int i = 0; i < pronunciationsArray.Count(); i++)
+                {
+                    JsonObject pronunciationObject = pronunciationsArray[i].GetObject();
+                    string word = pronunciationObject.GetNamedString(_wordString);
+                    string sound = pronunciationObject.GetNamedString(_soundString);
+                    result.Add(new Pronunciation(word, sound));
+                }
+            }
+
+            return result;
+        }
+
+        public void SavePronunciations(string filename)
+        {
+            JsonObject pronunicationsObject = new JsonObject();
+            JsonArray pronunciationsArray = new JsonArray();
+
+            foreach (Pronunciation pronunciation in Pronunciations.Instance.PronunciationList)
+            {
+                JsonObject pronunciationObject = new JsonObject();
+                pronunciationObject[_wordString] = JsonValue.CreateStringValue(pronunciation.Word);
+                pronunciationObject[_soundString] = JsonValue.CreateStringValue(pronunciation.Sound);
+                pronunciationsArray.Add(pronunciationObject);
+            }
+
+            pronunicationsObject[_pronunciationsString] = pronunciationsArray;
+            string jsonString = pronunicationsObject.Stringify();
 
             _accessor.writeJsonFile(filename, jsonString);
         }

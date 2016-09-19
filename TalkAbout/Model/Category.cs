@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TalkAbout.Model
 {
+    [DebuggerDisplay("Category: {Name}")]
     public class Category
     {
         private string _name;

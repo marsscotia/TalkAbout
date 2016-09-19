@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TalkAbout.Model
 {
@@ -12,6 +13,7 @@ namespace TalkAbout.Model
     /// for future use.
     /// 
     /// </summary>
+    [DebuggerDisplay("Phrase: {Name}")]
     public class Phrase
     {
         private string _name;

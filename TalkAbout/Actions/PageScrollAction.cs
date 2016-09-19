@@ -55,19 +55,37 @@ namespace TalkAbout.Actions
 
             if (target != null)
             {
+
+                ListViewBase view = null;
+                ScrollViewer scroll = null;
+
                 if (target.GetType() == typeof(SemanticZoom))
                 {
                     SemanticZoom semanticZoom = (SemanticZoom)target;
-                    ListViewBase view = null;
-                    ScrollViewer scroll = null;
-                    if (semanticZoom.IsZoomedInViewActive)
+                    if (semanticZoom.Visibility == Visibility.Visible)
                     {
-                        view = (ListViewBase)semanticZoom.ZoomedInView;
+                        if (semanticZoom.IsZoomedInViewActive)
+                        {
+                            view = (ListViewBase)semanticZoom.ZoomedInView;
+                        }
+                        else
+                        {
+                            view = (ListViewBase)semanticZoom.ZoomedOutView;
+                        } 
                     }
-                    else
+                }
+                else if (target.GetType() == typeof(ListView))
+                {
+                    ListView listView = (ListView)target;
+                    if (listView.Visibility == Visibility.Visible)
                     {
-                        view = (ListViewBase)semanticZoom.ZoomedOutView;
+                        view = listView;
                     }
+                }
+
+
+                if(view != null)
+                { 
                     scroll = _getScrollViewer(view);
 
                     if (Up)

@@ -33,6 +33,7 @@ namespace TalkAbout.ViewModel
             {
             }
             _receiver.TaskComplete(task, _identifier);
+            _receiver = null;
         }
     }
 }

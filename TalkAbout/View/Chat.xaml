@@ -14,26 +14,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Name="ChatPage">
+    x:Name="ChatPage"
+    NavigationCacheMode="Enabled">
 
     <Page.Resources>
-        <Style  x:Key="CommandButtonStyle" TargetType="Button" >
-            <Setter Property="Margin" Value="0, 10, 10, 0" />
-            <Setter Property="Height" Value="80" />
-            <Setter Property="Width" Value="80" />
-        </Style>
-        <Style x:Key="EndCommandButtonStyle" TargetType="Button" BasedOn="{StaticResource CommandButtonStyle}" >
-            <Setter Property="Margin" Value="0, 10, 0, 0" />
-        </Style>
-        <converters:BooleanHiddenConverter x:Key="BooleanVisibilityConverter" />
-        <converters:InverseBooleanHiddenConverter x:Key="BooleanHiddenConverter" />
-        <converters:BooleanSelectionModeConverter x:Key="SelectionModeConverter" />
-        <converters:ListViewSelectedItemsConverter x:Key="SelectedItemsConverter" />
-        <Storyboard x:Name="NewCategoryPanelAppear">
-            <DoubleAnimation Storyboard.TargetName="NewCategoryPanel" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
-        </Storyboard>
-        <CollectionViewSource x:Name="PhrasesViewSource" IsSourceGrouped="True" 
-                              Source="{Binding Phrases}" d:Source="{Binding Phrases}"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StyleDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        
+            
+            <Storyboard x:Name="NewCategoryPanelAppear">
+                <DoubleAnimation Storyboard.TargetName="NewCategoryPanel" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
+            </Storyboard>
+            <CollectionViewSource x:Name="PhrasesViewSource" IsSourceGrouped="True" 
+                                  Source="{Binding Phrases}" d:Source="{Binding Phrases}"/>
+        </ResourceDictionary>
     </Page.Resources>
 
 
@@ -48,9 +44,32 @@
             </behaviours:KeyUpBehaviour>
             <behaviours:KeyUpBehaviour Key="PageUp">
                 <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Up="true" />
+                <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Up="true" />
             </behaviours:KeyUpBehaviour>
             <behaviours:KeyUpBehaviour Key="PageDown">
                 <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Down="True" />
+                <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Down="true" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="A" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding SetSortCommand}" CommandParameter="{Binding AlphabetSort}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="G" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding SetSortCommand}" CommandParameter="{Binding CategorySort}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="F" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding SetSortCommand}" CommandParameter="{Binding FrequencySort}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="R" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding SetSortCommand}" CommandParameter="{Binding RecentSort}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Escape">
+                <core:InvokeCommandAction Command="{Binding CancelSaveCommand}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="S" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding SaveCommand}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="L" AndControl="True">
+                <core:InvokeCommandAction Command="{Binding ToggleSelectionModeCommand}" />
             </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
@@ -97,6 +116,7 @@
                         <Setter Target="NavigationPanel.(RelativePanel.AlignBottomWithPanel)" Value="True" />
                         <Setter Target="PhrasesList.(RelativePanel.Above)" Value="SelectionModeButton" />
                         <Setter Target="CategoryList.(RelativePanel.Above)" Value="SelectionModeButton" />
+                        <Setter Target="SortedPhrasesList.(RelativePanel.Above)" Value="SelectionModeButton" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Wide">
@@ -115,6 +135,7 @@
                         <Setter Target="NavigationPanel.(RelativePanel.Above)" Value="SelectionModeButton" />
                         <Setter Target="PhrasesList.(RelativePanel.Above)" Value="NavigationPanel" />
                         <Setter Target="CategoryList.(RelativePanel.Above)" Value="NavigationPanel" />
+                        <Setter Target="SortedPhrasesList.(RelativePanel.Above)" Value="NavigationPanel" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Narrow" >
@@ -131,7 +152,8 @@
                         <Setter Target="CancelSavePhraseButton.(RelativePanel.AlignTopWithPanel)" Value="True" />
                         <Setter Target="NavigationPanel.(RelativePanel.AlignBottomWithPanel)" Value="True" />
                         <Setter Target="PhrasesList.(RelativePanel.Above)" Value="SelectionModeButton" />
-                        <Setter Target="CategoryList.(RealtivePanel.Above)" Value="SelectionModeButton" />
+                        <Setter Target="CategoryList.(RelativePanel.Above)" Value="SelectionModeButton" />
+                        <Setter Target="SortedPhrasesList.(RelativePanel.Above)" Value="SelectionModeButton" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -140,6 +162,8 @@
         <CommandBar x:Name="CommandBar" 
                         RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" >
             <AppBarButton Icon="Setting" Label="Settings" Click="AppBarButton_Click" />
+            <AppBarButton Icon="Remote" Label="Abbreviate" Click="AppBarButton_Click_1" />
+            <AppBarButton Icon="Message" Label="Pronounce" Click="AppBarButton_Click_2"/>
         </CommandBar>
 
         
@@ -191,34 +215,51 @@
                     <views:ShortcutPanel CommandShortcut="Ctrl + l" SymbolText="" />
                 </Button>
 
-                <Button x:Name="CategorySortButton" Style="{StaticResource CommandButtonStyle}"
-                        RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True"
-                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}" >
+                <Button x:Name="CategorySortButton" 
+                        Style="{StaticResource CommandButtonStyle}"
+                        RelativePanel.AlignRightWithPanel="True" 
+                        RelativePanel.AlignTopWithPanel="True"
+                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding SetSortCommand}" 
+                        CommandParameter="{Binding CategorySort}">
                     <views:ShortcutPanel CommandShortcut="Ctrl + g" SymbolText="" />
                 </Button>
 
-                <Button x:Name="AlphabetSortButton" Style="{StaticResource CommandButtonStyle}"
-                        RelativePanel.Below="CategorySortButton" RelativePanel.AlignRightWith="CategorySortButton"
-                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}">
+                <Button x:Name="AlphabetSortButton" 
+                        Style="{StaticResource CommandButtonStyle}"
+                        RelativePanel.Below="CategorySortButton" 
+                        RelativePanel.AlignRightWith="CategorySortButton"
+                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding SetSortCommand}"
+                        CommandParameter="{Binding AlphabetSort}">
+                       
                     <views:ShortcutPanel CommandShortcut="Ctrl + a" PlainText="A-Z" />
                 </Button>
 
-                <Button x:Name="RecentSortButton" Style="{StaticResource CommandButtonStyle}"
-                        RelativePanel.Below="AlphabetSortButton" RelativePanel.AlignRightWith="CategorySortButton"
-                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}">
+                <Button x:Name="RecentSortButton" 
+                        Style="{StaticResource CommandButtonStyle}"
+                        RelativePanel.Below="AlphabetSortButton" 
+                        RelativePanel.AlignRightWith="CategorySortButton"
+                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding SetSortCommand}"
+                        CommandParameter="{Binding RecentSort}">
                     <views:ShortcutPanel CommandShortcut="Ctrl + r" SymbolText="" />
                 </Button>
 
-                <Button x:Name="FrequencySortButton" Style="{StaticResource CommandButtonStyle}"
-                        RelativePanel.Below="RecentSortButton" RelativePanel.AlignRightWith="CategorySortButton"
-                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}">
+                <Button x:Name="FrequencySortButton" 
+                        Style="{StaticResource CommandButtonStyle}"
+                        RelativePanel.Below="RecentSortButton" 
+                        RelativePanel.AlignRightWith="CategorySortButton"
+                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding SetSortCommand}"
+                        CommandParameter="{Binding FrequencySort}">
                     <views:ShortcutPanel CommandShortcut="Ctrl + f" PlainText="1-3" />
                 </Button>
 
                 <!-- NewCategoryPanel: contains textbox and functions for creating new category -->
                 <RelativePanel x:Name="NewCategoryPanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" 
                                RelativePanel.LeftOf="CategorySortButton" Visibility="{x:Bind ViewModel.ShowNewCategoryPanel, Converter={StaticResource BooleanVisibilityConverter}, Mode=OneWay}">
-
+                    
                     <interaction:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{Binding Visibility, ElementName=NewCategoryPanel}" Value="Visible" >
                             <actions:SetFocusAction TargetObject="{Binding ElementName=NewCategoryTextBox}" />
@@ -229,7 +270,7 @@
                         </core:DataTriggerBehavior>
                     </interaction:Interaction.Behaviors>
                     <Button x:Name="CancelSavePhraseButton" Style="{StaticResource CommandButtonStyle}"
-                             RelativePanel.AlignRightWithPanel="True" Click="{x:Bind ViewModel.ChatMode}">
+                             RelativePanel.AlignRightWithPanel="True" Command="{Binding CancelSaveCommand}">
                         <views:ShortcutPanel CommandShortcut="Escape" SymbolText="" />
                     </Button>
 
@@ -262,6 +303,7 @@
                         <interaction:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Down="true" />
+                                <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Down="true" />
                             </core:EventTriggerBehavior>
                         </interaction:Interaction.Behaviors>
                         <views:ShortcutPanel CommandShortcut="PgDn" SymbolText="" />
@@ -272,6 +314,7 @@
                         <interaction:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <actions:PageScrollAction TargetObject="{Binding ElementName=PhrasesList}" Up="true" />
+                                <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Up="True" />
                             </core:EventTriggerBehavior>
                         </interaction:Interaction.Behaviors>
                         <views:ShortcutPanel CommandShortcut="PgUp" SymbolText="" />
@@ -290,7 +333,7 @@
                 
                 
                 
-
+                <!-- PhrasesList: SemanticZoom between phrases and categories -->
                 <SemanticZoom x:Name="PhrasesList" 
                               Visibility="{Binding ShowPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
                               RelativePanel.LeftOf="CategorySortButton" 
@@ -335,6 +378,7 @@
                     </SemanticZoom.ZoomedOutView>
                 </SemanticZoom>
 
+                <!-- CategoryList: List of categories, used when adding phrases -->
                 <ListView x:Name="CategoryList" RelativePanel.LeftOf="CategorySortButton" 
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="NewCategoryPanel"
@@ -350,6 +394,25 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                </ListView>
+                
+                <!-- SortedPhrasesList: List of ungrouped phrases which can be sorted -->
+                <ListView x:Name="SortedPhrasesList"
+                          RelativePanel.LeftOf="CategorySortButton"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.Below="NewCategoryPanel"
+                          Visibility="{Binding ShowSortedPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
+                          ItemsSource="{Binding SortedPhrases, Mode=OneWay}"
+                          SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay ,Converter={StaticResource SelectionModeConverter}}"
+                          Margin="0, 10, 10, 0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    
                 </ListView>
                     
             </RelativePanel>

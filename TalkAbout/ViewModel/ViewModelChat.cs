@@ -24,19 +24,27 @@ namespace TalkAbout.ViewModel
         private Categories _categories;
         private ObservableCollection<IGrouping<Category,Phrase>> _phrases;
         private ObservableCollection<Category> _categoryList;
+        private ObservableCollection<Phrase> _sortedPhrases;
+        private IEnumerable<Phrase> _sortedPhrasesBacking;
         private Category _selectedCategory;
         private IList<Phrase> _selectedPhrases;
-        private RelayCommand<IList<object>> _deletePhrasesCommand;
-
-        private int _mode;
+        private Sorts _sort;
         
         private const int _chatMode = 1;
         private const int _saveMode = 2;
+
+        private const int _alphabetSort = 1;
+        private const int _frequencySort = 2;
+        private const int _recentSort = 3;
+        private const int _categorySort = 4;
 
         private const string _phraseAlreadyExists = "That phrase already exists.";
         private const string _categoryNotFound = "The selected category couldn't be found.  Try selecting another.";
         private const string _messageEmpty = "The message is empty! Try typing something then saving it.";
         private const string _categoryEmpty = "The new category needs a name!  Try typing a name and then saving the phrase.";
+
+        private enum Sorts { Recent, Frequency, Alphabet, Category };
+        private enum Lists { Phrases, Categories, SortedPhrases };
 
         #region Properties
         /// <summary>
@@ -114,6 +122,18 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public bool ShowSortedPhrasesList
+        {
+            get
+            {
+                return _showSortedPhrasesList;
+            }
+            set
+            {
+                SetProperty(ref _showSortedPhrasesList, value);
+            }
+        }
+
 
         public string NewCategory
         {
@@ -173,6 +193,20 @@ namespace TalkAbout.ViewModel
                     _categoryList.Add(item);
                 }
                 return _categoryList;
+            }
+        }
+
+        public ObservableCollection<Phrase> SortedPhrases
+        {
+            get
+            {
+                _populateSortedPhrases();
+                _sortedPhrases.Clear();
+                foreach (var item in _sortedPhrasesBacking)
+                {
+                    _sortedPhrases.Add(item);
+                }
+                return _sortedPhrases;
             }
         }
 
@@ -265,6 +299,38 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public int AlphabetSort
+        {
+            get
+            {
+                return _alphabetSort;
+            }
+        }
+
+        public int FrequencySort
+        {
+            get
+            {
+                return _frequencySort;
+            }
+        }
+
+        public int RecentSort
+        {
+            get
+            {
+                return _recentSort;
+            }
+        }
+
+        public int CategorySort
+        {
+            get
+            {
+                return _categorySort;
+            }
+        }
+
         public RelayCommand<IList<object>> DeletePhrasesCommand
         {
             get
@@ -272,7 +338,38 @@ namespace TalkAbout.ViewModel
                 return new RelayCommand<IList<object>>(DeletePhrases);
             }
         }
-         
+
+        public RelayCommand<int> SetSortCommand
+        {
+            get
+            {
+                return new RelayCommand<int>(SetSort);
+            }
+        }
+        
+        public Command CancelSaveCommand
+        {
+            get
+            {
+                return new Command(CancelSave);
+            }
+        }
+
+        public Command SaveCommand
+        {
+            get
+            {
+                return new Command(SavePhraseMode);
+            }
+        }
+
+        public Command ToggleSelectionModeCommand
+        {
+            get
+            {
+                return new Command(ToggleSelectionMode);
+            }
+        }
 
         #endregion Properties
 
@@ -282,6 +379,8 @@ namespace TalkAbout.ViewModel
         {
             _categories = Categories.Instance;
             _phrases = new ObservableCollection<IGrouping<Category, Phrase>>();
+            _sort = Sorts.Category;
+            _sortedPhrases = new ObservableCollection<Phrase>();
             _categoryList = new ObservableCollection<Category>();
             ChatMode();
             _loadPhrases();
@@ -298,8 +397,7 @@ namespace TalkAbout.ViewModel
                 if (Settings.UseCategories)
                 {
                     ShowNewCategoryPanel = true;
-                    ShowCategoryList = true;
-                    ShowPhrasesList = false;
+                    _showList(Lists.Categories);
                 } 
             
         }
@@ -311,8 +409,21 @@ namespace TalkAbout.ViewModel
         public void ChatMode()
         {
             ShowNewCategoryPanel = false;
-            ShowCategoryList = false;
-            ShowPhrasesList = true;
+            if (Settings.UseCategories)
+            {
+                if (_sort == Sorts.Category)
+                {
+                    _showList(Lists.Phrases);
+                }
+                else
+                {
+                    _showList(Lists.SortedPhrases);
+                }
+            }
+            else
+            {
+                _showList(Lists.SortedPhrases);
+            }
             SelectionMode = false;
             NewCategory = "";
         }
@@ -325,6 +436,7 @@ namespace TalkAbout.ViewModel
         }
 
 
+
         public void AddNewPhraseAndNewCategory()
         {
             if (!string.IsNullOrWhiteSpace(_message) && !string.IsNullOrWhiteSpace(_newCategory))
@@ -335,6 +447,7 @@ namespace TalkAbout.ViewModel
                 NewCategory = "";
                 OnPropertyChanged("Phrases");
                 OnPropertyChanged("CategoryList");
+                OnPropertyChanged("SortedPhrases");
                 ChatMode();
             }
         }
@@ -360,6 +473,7 @@ namespace TalkAbout.ViewModel
                 Message = "";
                 SelectedCategory = null;
                 OnPropertyChanged("Phrases");
+                OnPropertyChanged("SortedPhrases");
                 ChatMode();
             }
             else
@@ -390,6 +504,7 @@ namespace TalkAbout.ViewModel
                     {
                         OnPropertyChanged("Phrases");
                         OnPropertyChanged("CategoryList");
+                        OnPropertyChanged("SortedPhrases");
                         break;
                     }
                 case "error":
@@ -410,7 +525,6 @@ namespace TalkAbout.ViewModel
         {
 
             SelectionMode = !SelectionMode;
-            Debug.WriteLine("ViewModelChat.cs: Selection Mode is " + SelectionMode.ToString());
         }
 
         public void DeletePhrases(IList<object> selectedPhrases)
@@ -430,11 +544,152 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public void SetSort(int aSort)
+        {
+            switch (aSort)
+            {
+                case _alphabetSort:
+                    {
+                        _setSort(Sorts.Alphabet);
+                        break;
+                    }
+                case _frequencySort:
+                    {
+                        _setSort(Sorts.Frequency);
+                        break;
+                    }
+                case _recentSort:
+                    {
+                        _setSort(Sorts.Recent);
+                        break;
+                    }
+                case _categorySort:
+                    {
+                        _setSort(Sorts.Category);
+                        break;
+                    }
+                default:
+                    {
+                        _setSort(Sorts.Category);
+                        break;
+                    }
+                    
+            }
+            
+        }
+
+        public void CancelSave()
+        {
+            if (ShowNewCategoryPanel)
+            {
+                ChatMode();
+            }
+        }
+
+        private void _setSort(Sorts aSort)
+        {
+            if (_sort != aSort)
+            {
+                _sort = aSort;
+                switch (_sort)
+                {
+                    case Sorts.Recent:
+                        {
+                            _showList(Lists.SortedPhrases);
+
+                            break;
+                        }
+                    case Sorts.Frequency:
+                        {
+                            _showList(Lists.SortedPhrases);
+
+                            break;
+                        }
+                    case Sorts.Alphabet:
+                        {
+                            _showList(Lists.SortedPhrases);
+
+                            break;
+                        }
+                    case Sorts.Category:
+                        {
+                            if (Settings.UseCategories)
+                            {
+                                _showList(Lists.Phrases);
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                OnPropertyChanged("SortedPhrases"); 
+            }
+        }
+
+        private void _populateSortedPhrases()
+        {
+            _sortedPhrasesBacking = from Category c in _categories.CategoryList
+                                    from Phrase p in c.Phrases
+                                    select p;
+            switch (_sort)
+            {
+                case Sorts.Recent:
+                    { 
+                        _sortedPhrasesBacking = _sortedPhrasesBacking.OrderByDescending(phrase => phrase.Recent);
+                        break;
+                    }
+                case Sorts.Frequency:
+                    {
+                        _sortedPhrasesBacking = _sortedPhrasesBacking.OrderByDescending(phrase => phrase.Frequency);
+                        break;
+                    }
+                case Sorts.Alphabet:
+                    {
+                        _sortedPhrasesBacking = _sortedPhrasesBacking.OrderBy(phrase => phrase.Name, StringComparer.CurrentCultureIgnoreCase);
+                        break;
+                    }
+                case Sorts.Category:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void _reportError(string error)
         {
             Error = error;
             ShowError = true;
             new TaskNotifier(Task.Delay(5000), this, "error");
+        }
+
+        private void _showList(Lists aList)
+        {
+            switch (aList)
+            {
+                case Lists.Phrases:
+                    {
+                        ShowPhrasesList = true;
+                        ShowCategoryList = false;
+                        ShowSortedPhrasesList = false;
+                        break;
+                    }
+                case Lists.Categories:
+                    {
+                        ShowPhrasesList = false;
+                        ShowCategoryList = true;
+                        ShowSortedPhrasesList = false;
+                        break;
+                    }
+                case Lists.SortedPhrases:
+                    {
+                        ShowPhrasesList = false;
+                        ShowCategoryList = false;
+                        ShowSortedPhrasesList = true;
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
     }
 }

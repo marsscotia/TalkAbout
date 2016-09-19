@@ -9,6 +9,7 @@ using Windows.System;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Core;
+using System.Diagnostics;
 
 namespace TalkAbout.Behaviours
 {
@@ -45,6 +46,7 @@ namespace TalkAbout.Behaviours
         {
             (AssociatedObject as UIElement).KeyUp -= UIElement_KeyHandler;
             (AssociatedObject as UIElement).KeyDown -= UIElement_KeyHandler;
+            AssociatedObject = null;
         }
 
         private void UIElement_KeyHandler(object sender, KeyRoutedEventArgs e)

@@ -1,10 +1,4 @@
 ﻿using Microsoft.Xaml.Interactivity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +6,8 @@ namespace TalkAbout.Actions
 {
     class SetFocusAction : DependencyObject, IAction
     {
-        public static readonly DependencyProperty TargetObjectProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty TargetObjectProperty = 
+            DependencyProperty.Register(
             "TargetObject",
             typeof(object),
             typeof(SetFocusAction),
@@ -36,7 +31,9 @@ namespace TalkAbout.Actions
             object target;
             if (ReadLocalValue(TargetObjectProperty) != DependencyProperty.UnsetValue)
             {
-                target = TargetObject;
+                
+                target = GetValue(TargetObjectProperty);
+
             }
             else
             {
@@ -45,10 +42,19 @@ namespace TalkAbout.Actions
 
             if (target != null)
             {
-                if (target.GetType() == typeof(TextBox))
+                if (target is TextBox)
                 {
                     TextBox targetTextBox = (TextBox)target;
                     targetTextBox.Focus(FocusState.Programmatic);
+                    result = true;
+                }
+                else if (target is Control)
+                {
+                    Control targetControl = (Control)target;
+                    if (targetControl.Visibility == Visibility.Visible)
+                    {
+                        targetControl.Focus(FocusState.Programmatic);
+                    }
                     result = true;
                 }
             }

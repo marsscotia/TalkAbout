@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace TalkAbout.Model
     public class Abbreviations
     {
         private static Abbreviations _instance;
-        private List<Abbreviation> _abbreviationList;
+        private ObservableCollection<Abbreviation> _abbreviationList;
         private JsonConverter _converter;
         private const string _filename = "abbreviations.txt";
 
@@ -40,7 +41,7 @@ namespace TalkAbout.Model
             }
         }
 
-        public List<Abbreviation> AbbreviationList
+        public ObservableCollection<Abbreviation> AbbreviationList
         {
             get
             {
@@ -52,12 +53,17 @@ namespace TalkAbout.Model
         private Abbreviations()
         {
             _converter = new JsonConverter();
-            _loadAbbreviationsFromFile();
+            _abbreviationList = new ObservableCollection<Abbreviation>();
         }
 
-        private async void _loadAbbreviationsFromFile()
+        public async Task LoadAbbreviationsFromFile()
         {
-            _abbreviationList = await _converter.GetAbbreviations(_filename);
+            List<Abbreviation> list = await _converter.GetAbbreviations(_filename);
+            _abbreviationList.Clear();
+            foreach (Abbreviation abbreviation in list)
+            {
+                _abbreviationList.Add(abbreviation);
+            }
         }
 
         //CRUD operations

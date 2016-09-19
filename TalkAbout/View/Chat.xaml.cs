@@ -46,5 +46,17 @@ namespace TalkAbout
             Frame root = Window.Current.Content as Frame;
             root.Navigate(typeof(Settings));
         }
+
+        private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            root.Navigate(typeof(Abbreviations));
+        }
+
+        private void AppBarButton_Click_2(object sender, RoutedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            root.Navigate(typeof(Pronunciations));
+        }
     }
 }
