@@ -14,8 +14,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Name="ChatPage"
-    NavigationCacheMode="Enabled">
+    x:Name="ChatPage">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -70,6 +69,14 @@
             </behaviours:KeyUpBehaviour>
             <behaviours:KeyUpBehaviour Key="L" AndControl="True">
                 <core:InvokeCommandAction Command="{Binding ToggleSelectionModeCommand}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="M" AndAlt="True">
+                <actions:SetFocusAction TargetObject="{Binding ElementName=MessageWindow}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="L" AndAlt="True">
+                <actions:SetFocusAction TargetObject="{Binding ElementName=PhrasesList}" />
+                <actions:SetFocusAction TargetObject="{Binding ElementName=SortedPhrasesList}" />
+                <actions:SetFocusAction TargetObject="{Binding ElementName=CategoryList}" />
             </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
@@ -174,45 +181,70 @@
             
             
             <!-- MessagePanel: Contains message text box and functions-->
-            <RelativePanel x:Name="MessagePanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" >
-                <TextBox x:Name="MessageWindow" Margin="0, 10, 0, 10" 
-                RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" 
+            <RelativePanel x:Name="MessagePanel" 
+                           RelativePanel.AlignLeftWithPanel="True" 
+                           RelativePanel.AlignTopWithPanel="True"
+                           Padding="0, 4, 0, 0">
+                <TextBlock x:Name="MessageWindowLabel" 
+                           x:Uid="MessageWindowLabel"
+                           RelativePanel.AlignTopWithPanel="True" 
+                           RelativePanel.AlignLeftWithPanel="True"
+                           Visibility="{Binding Settings.ShowShortcuts, Converter={StaticResource BooleanVisibilityConverter}}"
+                           Style="{StaticResource LabelStyle}"/>
+                <views:MessageTextBox x:Name="MessageWindow" Margin="0, 0, 0, 10" 
+                         DataContext="{Binding VMMessage}"
+                         RelativePanel.Below="MessageWindowLabel" 
+                         RelativePanel.AlignLeftWithPanel="True" 
+                         RelativePanel.AlignRightWithPanel="True" 
                          RelativePanel.Above="MessageControlsPanel"
                          FontSize="{x:Bind ViewModel.Settings.FontSize}"
                          PlaceholderText="Type and press speak or enter"
                          Text="{Binding Path=Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         BindableSelectionStart="{Binding Path=CaretIndex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         BindableSelectionLength="{Binding Path=SelectionLength,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding Path=Enabled,Mode=OneWay}"
+                         TextChanged="{x:Bind ViewModel.UpdateMessage}"
                          >
+                   
                     <interaction:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Loaded" >
                             <actions:SetFocusAction TargetObject="{Binding ElementName=MessageWindow}" />
                         </core:EventTriggerBehavior>
                     </interaction:Interaction.Behaviors>
-                </TextBox>
-                    <StackPanel x:Name="MessageControlsPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
+                </views:MessageTextBox>
+                <TextBlock x:Name="MessageWindowShortcut"
+                           x:Uid="MessageWindowShortcut"
+                           Text="alt + m"
+                           RelativePanel.AlignRightWith="MessageWindow"
+                           RelativePanel.Above="MessageWindow"
+                           Visibility="{Binding Settings.ShowShortcuts, Converter={StaticResource BooleanVisibilityConverter}}"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
+                <StackPanel x:Name="MessageControlsPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
                             Orientation="Horizontal" >
                     <Button x:Name="SpeakButton" Style="{StaticResource CommandButtonStyle}">
-                        <views:ShortcutPanel  CommandShortcut="Enter" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="SpeakShortcutPanel" CommandShortcut="Enter" SymbolText="" />
                     </Button>
                     <Button x:Name="DeleteWord" Style="{StaticResource CommandButtonStyle}">
-                        <views:ShortcutPanel  CommandShortcut="Ctrl + W" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="DelWordShortcutPanel" CommandShortcut="Ctrl + W" SymbolText="" />
                     </Button>
                     <Button x:Name="Clear" Style="{StaticResource CommandButtonStyle}">
-                        <views:ShortcutPanel  CommandShortcut="Ctrl + N" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="ClearShortcutPanel" CommandShortcut="Ctrl + N" SymbolText="" />
                     </Button>
                     <Button x:Name="Save" Style="{StaticResource EndCommandButtonStyle}" Click="{x:Bind ViewModel.SavePhraseMode}">
-                        <views:ShortcutPanel  CommandShortcut="Ctrl + S" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="SaveShortcutPanel" CommandShortcut="Ctrl + S" SymbolText="" />
                     </Button>
                 </StackPanel>
             </RelativePanel>
 
             
             <!-- PhrasesPanel: contains listviews and functions -->
-            <RelativePanel x:Name="PhrasesPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
+            <RelativePanel x:Name="PhrasesPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                           Padding="0, 4, 0, 0">
                 
                 <Button x:Name="SelectionModeButton" Style="{StaticResource CommandButtonStyle}" 
                         RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" 
                         IsEnabled="{x:Bind ViewModel.SelectionModeEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ToggleSelectionMode}">
-                    <views:ShortcutPanel CommandShortcut="Ctrl + l" SymbolText="" />
+                    <views:ShortcutPanel x:Uid="SelectionShortcutPanel" CommandShortcut="Ctrl + l" SymbolText="" />
                 </Button>
 
                 <Button x:Name="CategorySortButton" 
@@ -222,7 +254,7 @@
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}" 
                         CommandParameter="{Binding CategorySort}">
-                    <views:ShortcutPanel CommandShortcut="Ctrl + g" SymbolText="" />
+                    <views:ShortcutPanel x:Uid="CategoryShortcutPanel" CommandShortcut="Ctrl + g" SymbolText="" />
                 </Button>
 
                 <Button x:Name="AlphabetSortButton" 
@@ -233,7 +265,7 @@
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding AlphabetSort}">
                        
-                    <views:ShortcutPanel CommandShortcut="Ctrl + a" PlainText="A-Z" />
+                    <views:ShortcutPanel x:Uid="AlphabetShortcutPanel" CommandShortcut="Ctrl + a" PlainText="A-Z" />
                 </Button>
 
                 <Button x:Name="RecentSortButton" 
@@ -243,7 +275,7 @@
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding RecentSort}">
-                    <views:ShortcutPanel CommandShortcut="Ctrl + r" SymbolText="" />
+                    <views:ShortcutPanel x:Uid="RecentShortcutPanel" CommandShortcut="Ctrl + r" SymbolText="" />
                 </Button>
 
                 <Button x:Name="FrequencySortButton" 
@@ -253,7 +285,7 @@
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding FrequencySort}">
-                    <views:ShortcutPanel CommandShortcut="Ctrl + f" PlainText="1-3" />
+                    <views:ShortcutPanel x:Uid="FrequencyShortcutPanel" CommandShortcut="Ctrl + f" PlainText="1-3" />
                 </Button>
 
                 <!-- NewCategoryPanel: contains textbox and functions for creating new category -->
@@ -271,12 +303,12 @@
                     </interaction:Interaction.Behaviors>
                     <Button x:Name="CancelSavePhraseButton" Style="{StaticResource CommandButtonStyle}"
                              RelativePanel.AlignRightWithPanel="True" Command="{Binding CancelSaveCommand}">
-                        <views:ShortcutPanel CommandShortcut="Escape" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="CancelSaveShortcutPanel" CommandShortcut="Escape" SymbolText="" />
                     </Button>
 
                     <Button x:Name="ConfirmSavePhraseButton" Style="{StaticResource CommandButtonStyle}" 
                             RelativePanel.LeftOf="CancelSavePhraseButton" RelativePanel.AlignTopWith="CancelSavePhraseButton" Click="{x:Bind ViewModel.AddNewPhraseAndNewCategory}">
-                        <views:ShortcutPanel CommandShortcut="Enter" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="ConfirmSaveShortcutPanel" CommandShortcut="Enter" SymbolText="" />
                     </Button>
 
                     <TextBox x:Name="NewCategoryTextBox" Margin="0, 10, 10, 0"
@@ -291,7 +323,7 @@
                         RelativePanel.LeftOf="SelectionModeButton" RelativePanel.AlignBottomWithPanel="True"
                         Visibility="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding DeletePhrasesCommand}" CommandParameter="{Binding ElementName=ZoomedInList, Converter={StaticResource SelectedItemsConverter}}">
-                    <views:ShortcutPanel CommandShortcut="Delete" SymbolText="" />
+                    <views:ShortcutPanel x:Uid="DeletePhrasesShortcutPanel" CommandShortcut="Delete" SymbolText="" />
                 </Button>
 
                 <!-- NavigationPanel: contains functions for navigating lists -->
@@ -306,7 +338,7 @@
                                 <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Down="true" />
                             </core:EventTriggerBehavior>
                         </interaction:Interaction.Behaviors>
-                        <views:ShortcutPanel CommandShortcut="PgDn" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="DownShortcutPanel" CommandShortcut="PgDn" SymbolText="" />
                     </Button>
 
                     <Button x:Name="UpButton" Style="{StaticResource CommandButtonStyle}" 
@@ -317,7 +349,7 @@
                                 <actions:PageScrollAction TargetObject="{Binding ElementName=SortedPhrasesList}" Up="True" />
                             </core:EventTriggerBehavior>
                         </interaction:Interaction.Behaviors>
-                        <views:ShortcutPanel CommandShortcut="PgUp" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="UpShortcutPanel" CommandShortcut="PgUp" SymbolText="" />
                     </Button>
 
                     <Button x:Name="BackButton" Style="{StaticResource CommandButtonStyle}" 
@@ -327,19 +359,25 @@
                                 <core:ChangePropertyAction TargetObject="{Binding ElementName=PhrasesList}" PropertyName="IsZoomedInViewActive" Value="false" />
                             </core:EventTriggerBehavior>
                         </interaction:Interaction.Behaviors>
-                        <views:ShortcutPanel CommandShortcut="Ctrl + b" SymbolText="" />
+                        <views:ShortcutPanel x:Uid="BackShortcutPanel" CommandShortcut="Ctrl + b" SymbolText="" />
                     </Button>
                 </RelativePanel>
-                
-                
-                
+
+                <TextBlock x:Name="ListLabel"
+                           RelativePanel.Below="NewCategoryPanel"
+                           RelativePanel.AlignLeftWithPanel="True"
+                           Text="{Binding ListHeaderText, Mode=OneWay}"
+                           Style="{StaticResource LabelStyle}"
+                           Visibility="{Binding Settings.ShowShortcuts, Converter={StaticResource BooleanVisibilityConverter}}"
+                           />
+
                 <!-- PhrasesList: SemanticZoom between phrases and categories -->
                 <SemanticZoom x:Name="PhrasesList" 
                               Visibility="{Binding ShowPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
                               RelativePanel.LeftOf="CategorySortButton" 
                               RelativePanel.AlignLeftWithPanel="True"
-                              RelativePanel.Below="NewCategoryPanel"
-                              Margin="0, 10, 10, 0">
+                              RelativePanel.Below="ListLabel"
+                              Margin="0, 0, 10, 0">
                     <SemanticZoom.ZoomedInView>
                         <ListView x:Name="ZoomedInList" 
                             ItemsSource="{Binding Source={StaticResource PhrasesViewSource}}"
@@ -381,12 +419,12 @@
                 <!-- CategoryList: List of categories, used when adding phrases -->
                 <ListView x:Name="CategoryList" RelativePanel.LeftOf="CategorySortButton" 
                           RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.Below="NewCategoryPanel"
+                          RelativePanel.Below="ListLabel"
                           Visibility="{Binding ShowCategoryList, Converter={StaticResource BooleanVisibilityConverter}}"
                           ItemsSource="{Binding CategoryList, Mode=OneWay}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                           SelectionChanged="{x:Bind ViewModel.AddNewPhraseToSelectedCategory}"
                           SelectionMode="Single"
-                          Margin="0, 10, 10, 0">
+                          Margin="0, 0, 10, 0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -400,21 +438,28 @@
                 <ListView x:Name="SortedPhrasesList"
                           RelativePanel.LeftOf="CategorySortButton"
                           RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.Below="NewCategoryPanel"
+                          RelativePanel.Below="ListLabel"
                           Visibility="{Binding ShowSortedPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
                           ItemsSource="{Binding SortedPhrases, Mode=OneWay}"
                           SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay ,Converter={StaticResource SelectionModeConverter}}"
-                          Margin="0, 10, 10, 0">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    
+                          Margin="0, 0, 10, 0"
+                          ItemTemplate="{StaticResource SortedPhraseTemplate}"
+                          >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
-                    
+
+                <TextBlock x:Name="ListShortcut"
+                           RelativePanel.Above="PhrasesList"
+                           RelativePanel.AlignRightWith="PhrasesList"
+                           Text="alt + l"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Visibility="{Binding Settings.ShowShortcuts, Converter={StaticResource BooleanVisibilityConverter}}"
+                           Margin="0, 0, 10, 0"/>
+
             </RelativePanel>
 
             <!-- ErrorPanel: a panel for displaying error messages to users -->

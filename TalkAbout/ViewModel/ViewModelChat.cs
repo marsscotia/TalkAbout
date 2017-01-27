@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TalkAbout.Model;
+using Windows.ApplicationModel.Resources;
 
 namespace TalkAbout.ViewModel
 {
@@ -21,14 +22,18 @@ namespace TalkAbout.ViewModel
         private string _newCategory;
         private string _message;
         private string _error;
+        private string _listHeaderText;
+        private TaskNotifier _notifier;
         private Categories _categories;
         private ObservableCollection<IGrouping<Category,Phrase>> _phrases;
         private ObservableCollection<Category> _categoryList;
-        private ObservableCollection<Phrase> _sortedPhrases;
+        //private ObservableCollection<Phrase> _sortedPhrases;
+        private ObservableCollection<ViewModelPhrase> _sortedPhrases;
         private IEnumerable<Phrase> _sortedPhrasesBacking;
         private Category _selectedCategory;
         private IList<Phrase> _selectedPhrases;
         private Sorts _sort;
+        private ViewModelMessage _viewModelMessage;
         
         private const int _chatMode = 1;
         private const int _saveMode = 2;
@@ -122,6 +127,19 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        /// <summary>
+        /// This property determines whether the category sorting button
+        /// appears.  It should only appear when categories are being used
+        /// and when the sorting panel has been switched on
+        /// </summary>
+        public bool ShowCategorySortButton
+        {
+            get
+            {
+                return Settings.UseCategories && Settings.ShowSorting;
+            }
+        }
+
         public bool ShowSortedPhrasesList
         {
             get
@@ -156,6 +174,18 @@ namespace TalkAbout.ViewModel
             set
             {
                 SetProperty(ref _message, value);
+            }
+        }
+
+        public string ListHeaderText
+        {
+            get
+            {
+                return _listHeaderText;
+            }
+            set
+            {
+                SetProperty(ref _listHeaderText, value);
             }
         }
 
@@ -196,19 +226,34 @@ namespace TalkAbout.ViewModel
             }
         }
 
-        public ObservableCollection<Phrase> SortedPhrases
+        //public ObservableCollection<Phrase> SortedPhrases
+        //{
+        //    get
+        //    {
+        //        _populateSortedPhrases();
+        //        _sortedPhrases.Clear();
+        //        foreach (var item in _sortedPhrasesBacking)
+        //        {
+        //            _sortedPhrases.Add(item);
+        //        }
+        //        return _sortedPhrases;
+        //    }
+        //}
+
+        public ObservableCollection<ViewModelPhrase> SortedPhrases
         {
             get
             {
                 _populateSortedPhrases();
                 _sortedPhrases.Clear();
-                foreach (var item in _sortedPhrasesBacking)
+                for (int i = 0; i < _sortedPhrasesBacking.Count(); i++)
                 {
-                    _sortedPhrases.Add(item);
+                    _sortedPhrases.Add(new ViewModelPhrase(_sortedPhrasesBacking.ElementAt(i), i));
                 }
                 return _sortedPhrases;
             }
         }
+
 
         /// <summary>
         /// Property defines selected category in category list.
@@ -331,6 +376,15 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public ViewModelMessage VMMessage
+        {
+            get
+            {
+                return _viewModelMessage;
+            }
+           
+        }
+
         public RelayCommand<IList<object>> DeletePhrasesCommand
         {
             get
@@ -370,6 +424,7 @@ namespace TalkAbout.ViewModel
                 return new Command(ToggleSelectionMode);
             }
         }
+        
 
         #endregion Properties
 
@@ -380,8 +435,10 @@ namespace TalkAbout.ViewModel
             _categories = Categories.Instance;
             _phrases = new ObservableCollection<IGrouping<Category, Phrase>>();
             _sort = Sorts.Category;
-            _sortedPhrases = new ObservableCollection<Phrase>();
+            _sortedPhrases = new ObservableCollection<ViewModelPhrase>();
             _categoryList = new ObservableCollection<Category>();
+            _viewModelMessage = new ViewModelMessage();
+            _notifier = new TaskNotifier(this);
             ChatMode();
             _loadPhrases();
         }
@@ -393,12 +450,36 @@ namespace TalkAbout.ViewModel
         /// </summary>
         public void SavePhraseMode()
         {
-            
-                if (Settings.UseCategories)
+
+            //if we're using categories, let the user select one or add a new one
+            if (Settings.UseCategories)
+            {
+                ShowNewCategoryPanel = true;
+                _showList(Lists.Categories);
+            }
+            //if we're not using categories, add the phrase to the default category
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(_message))
                 {
-                    ShowNewCategoryPanel = true;
-                    _showList(Lists.Categories);
-                } 
+                    int result = _categories.AddPhrase(_message);
+                    switch (result)
+                    {
+                        case -1:
+                            {
+                                _reportError(_phraseAlreadyExists);
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                    OnPropertyChanged("SortedPhrases");
+                }
+                else
+                {
+                    _reportError(_messageEmpty);
+                }
+            }
             
         }
 
@@ -428,11 +509,20 @@ namespace TalkAbout.ViewModel
             NewCategory = "";
         }
 
+        /// <summary>
+        /// This method is called when the text in the message window
+        /// is changed.  It's a forwarding call to the ViewModelMessage object.
+        /// </summary>
+        public void UpdateMessage()
+        {
+            Debug.WriteLine("ViewModelChat.cs: UpdateMessage() called.");
+            _viewModelMessage.Update();
+            
+        }
+
         private void _loadPhrases()
         {
-            TaskNotifier notifier = new TaskNotifier(_categories.LoadCategoriesFromFile(), this, "categories");
-
-            
+            _notifier.Execute(_categories.LoadCategoriesFromFile(), "categories");
         }
 
 
@@ -536,7 +626,14 @@ namespace TalkAbout.ViewModel
                     List<Phrase> selectedList = new List<Phrase>();
                     foreach (var item in selectedPhrases)
                     {
-                        selectedList.Add((Phrase)item);
+                        if (item is Phrase)
+                        {
+                            selectedList.Add((Phrase)item); 
+                        }
+                        else
+                        {
+                            selectedList.Add(((ViewModelPhrase)item).Phrase);
+                        }
                     }
                     _categories.DeletePhrases(selectedList);
                     OnPropertyChanged("Phrases");
@@ -659,11 +756,12 @@ namespace TalkAbout.ViewModel
         {
             Error = error;
             ShowError = true;
-            new TaskNotifier(Task.Delay(5000), this, "error");
+            _notifier.Execute(Task.Delay(5000), "error");
         }
 
         private void _showList(Lists aList)
         {
+            ResourceLoader loader = new ResourceLoader();
             switch (aList)
             {
                 case Lists.Phrases:
@@ -671,6 +769,7 @@ namespace TalkAbout.ViewModel
                         ShowPhrasesList = true;
                         ShowCategoryList = false;
                         ShowSortedPhrasesList = false;
+                        ListHeaderText = loader.GetString("PhrasesListHeaderText");
                         break;
                     }
                 case Lists.Categories:
@@ -678,6 +777,7 @@ namespace TalkAbout.ViewModel
                         ShowPhrasesList = false;
                         ShowCategoryList = true;
                         ShowSortedPhrasesList = false;
+                        ListHeaderText = loader.GetString("CategoriesListHeaderText");
                         break;
                     }
                 case Lists.SortedPhrases:
@@ -685,6 +785,7 @@ namespace TalkAbout.ViewModel
                         ShowPhrasesList = false;
                         ShowCategoryList = false;
                         ShowSortedPhrasesList = true;
+                        ListHeaderText = loader.GetString("PhrasesListHeaderText");
                         break;
                     }
                 default:

@@ -17,6 +17,7 @@ namespace TalkAbout.ViewModel
         private string _abbreviationCode;
         private string _abbreviationPhrase;
         private string _error;
+        private TaskNotifier _notifier;
         private IList<Abbreviation> _selectedAbbreviations;
         private Abbreviations _abbreviations;
         private ObservableCollection<Abbreviation> _abbreviationCollection;
@@ -159,6 +160,7 @@ namespace TalkAbout.ViewModel
             _abbreviationCollection = new ObservableCollection<Abbreviation>();
             AbbreviationCode = "";
             AbbreviationPhrase = "";
+            _notifier = new TaskNotifier(this);
             SelectionMode = false;
             _loadAbbreviations();
         }
@@ -254,14 +256,14 @@ namespace TalkAbout.ViewModel
 
         private void _loadAbbreviations()
         {
-            TaskNotifier notifier = new TaskNotifier(_abbreviations.LoadAbbreviationsFromFile(), this, "abbreviations");
+            _notifier.Execute(_abbreviations.LoadAbbreviationsFromFile(), "abbreviations");
         }
 
         private void _reportError(string error)
         {
             Error = error;
             ShowError = true;
-            new TaskNotifier(Task.Delay(5000), this, "error");
+            _notifier.Execute(Task.Delay(5000), "error");
         }
     }
 }

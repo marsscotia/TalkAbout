@@ -135,6 +135,45 @@
     <value>Expansion</value>
     <comment>The label for the text box which contains the phrase the abbreviation corresponds to</comment>
   </data>
+  <data name="AlphabetShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Alphabet</value>
+    <comment>The label for the shortcut panel associated with the alphabetical sort button</comment>
+  </data>
+  <data name="BackShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Back</value>
+    <comment>The label for the shortcut panel associated with the back button</comment>
+  </data>
+  <data name="CancelSaveShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>The label for the shortcut panel associated with the cancel save button</comment>
+  </data>
+  <data name="CategoriesListHeaderText" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="CategoryShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Category</value>
+    <comment>The label for the shortcut panel associated with the category sort button</comment>
+  </data>
+  <data name="ClearShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Clear</value>
+    <comment>The label for the shortcut panel associated with the Clear button</comment>
+  </data>
+  <data name="ConfirmSaveShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>OK</value>
+    <comment>The label for the shortcut panel associated with the confirm save button</comment>
+  </data>
+  <data name="DeletePhrasesShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Delete</value>
+    <comment>The label for the shortcut panel associated with the delete phrases button</comment>
+  </data>
+  <data name="DelWordShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Del Word</value>
+    <comment>The label for the shortcut panel associated with the Delete Word button</comment>
+  </data>
+  <data name="DownShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Down</value>
+    <comment>The label for the shortcut panel associated with the down button</comment>
+  </data>
   <data name="ErrorAbbreviationContainsSpaces" xml:space="preserve">
     <value>Abbreviation shortcuts can't contain spaces.  Try removing any spaces and then adding the abbrevation again.</value>
     <comment>The error message when a user tries to add an abbreviation shortcut which contains spaces.</comment>
@@ -163,6 +202,17 @@
   <data name="ErrorPronunciationWordMissing" xml:space="preserve">
     <value>The pronunciation word is empty! Add something then try again.</value>
   </data>
+  <data name="FrequencyShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Frequency</value>
+    <comment>The label for the shortcut panel associated with the frequency sort button</comment>
+  </data>
+  <data name="MessageWindowLabel.Text" xml:space="preserve">
+    <value>Message</value>
+    <comment>The label for the text box which contains the message to be spoken</comment>
+  </data>
+  <data name="PhrasesListHeaderText" xml:space="preserve">
+    <value>Phrases</value>
+  </data>
   <data name="PronunciationItemSoundLabel.Text" xml:space="preserve">
     <value>Pronounced as </value>
   </data>
@@ -177,5 +227,25 @@
   </data>
   <data name="PronunciationWordLabel.Text" xml:space="preserve">
     <value>Word</value>
+  </data>
+  <data name="RecentShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Recent</value>
+    <comment>The label for the shortcut panel associated with the recent sort button</comment>
+  </data>
+  <data name="SaveShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Save</value>
+    <comment>The label for the shortcut panel associated with the Save button</comment>
+  </data>
+  <data name="SelectionShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Select</value>
+    <comment>The label for the shortcut panel associated with the selection mode button</comment>
+  </data>
+  <data name="SpeakShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Speak</value>
+    <comment>The label for the shortcut panel associated with the speak button</comment>
+  </data>
+  <data name="UpShortcutPanel.CommandLabel" xml:space="preserve">
+    <value>Up</value>
+    <comment>The label for the shortcut panel associated with the up button</comment>
   </data>
 </root>

@@ -13,6 +13,9 @@
         <Style x:Key="SettingDescription" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" >
             <Setter Property="Margin" Value="0, 10, 0, 10" />
         </Style>
+        <Style x:Key="SettingHeader" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextBlockStyle}" >
+            <Setter Property="Margin" Value="0, 18, 0, 2" />
+        </Style>
     </Page.Resources>
     <Page.DataContext>
         <viewmodel:ViewModelSettings />
@@ -33,14 +36,24 @@
         <ScrollViewer>
             <RelativePanel x:Name="ContentPanel"   Margin="12, 0, 12, 0">
                 
-                <TextBlock x:Name="SpeechSettingsHeader" Text="Speech" Style="{StaticResource SubheaderTextBlockStyle}" />
+                <TextBlock x:Name="SpeechSettingsHeader" Text="Speech" Style="{StaticResource SettingHeader}" />
                 <TextBlock x:Name="VoiceSettingDescription" Text="Choose the voice the app will speak with" 
                            RelativePanel.Below="SpeechSettingsHeader" Style="{StaticResource SettingDescription}"  />
                 <ComboBox x:Name="VoiceComboBox" RelativePanel.Below="VoiceSettingDescription" 
                           ItemsSource="{Binding Path=Voices}" SelectedValue="{Binding Path=VoiceId, Mode=TwoWay}"
                           DisplayMemberPath="DisplayName" SelectedValuePath="Id" />
+                <TextBlock x:Name="VolumeSettingDescription"
+                           RelativePanel.Below="VoiceComboBox"
+                           Style="{StaticResource SettingDescription}"
+                           Text="Set the volume of speech" />
+                <Slider x:Name="VolumeSlider" RelativePanel.Below="VolumeSettingDescription"
+                        Value="{Binding VoiceVolume, Mode=TwoWay}"
+                        Minimum="0" Maximum="100" Orientation="Horizontal"
+                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWith="VolumeSettingDescription"
+                        TickFrequency="25" 
+                        />
                 <TextBlock x:Name="SpeakWordsSettingDescription" Text="Speak each word as I type it" 
-                           RelativePanel.Below="VoiceComboBox" Style="{StaticResource SettingDescription}" />
+                           RelativePanel.Below="VolumeSlider" Style="{StaticResource SettingDescription}" />
                 <ToggleSwitch x:Name="SpeakWordsToggle" RelativePanel.Below="SpeakWordsSettingDescription" 
                               IsOn="{Binding Path=SpeakWords, Mode=TwoWay}" />
                 <TextBlock x:Name="SpeakSentencesSettingDescription" Text="Speak each sentence as I type it" 
@@ -53,7 +66,7 @@
                               IsOn="{Binding Path=SpeakPhrases, Mode=TwoWay}" />
                 
                 <TextBlock x:Name="PhrasesSettingsHeader" Text="Saved Phrases" 
-                           RelativePanel.Below="SpeakPhrasesToggle" Style="{StaticResource SubheaderTextBlockStyle}" />
+                           RelativePanel.Below="SpeakPhrasesToggle" Style="{StaticResource SettingHeader}" />
                 <TextBlock x:Name="UseCategoriesSettingDescription" Text="Organise my saved phrases into categories"
                            RelativePanel.Below="PhrasesSettingsHeader" Style="{StaticResource SettingDescription}" />
                 <ToggleSwitch x:Name="UseCategoriesToggle" RelativePanel.Below="UseCategoriesSettingDescription" 
@@ -72,15 +85,29 @@
                               IsOn="{Binding Path=ShowSorting, Mode=TwoWay}" />
                 
                 <TextBlock x:Name="AppearanceSettingsHeader" Text="Appearance" 
-                           RelativePanel.Below="ShowSortingToggle" Style="{StaticResource SubheaderTextBlockStyle}" />
+                           RelativePanel.Below="ShowSortingToggle" Style="{StaticResource SettingHeader}" />
                 <TextBlock x:Name="FontSizeSettingDescription" Text="Choose the font size for the message and saved phrases" 
                            RelativePanel.Below="AppearanceSettingsHeader" Style="{StaticResource SettingDescription}" />
                 <ComboBox x:Name="FontSizeComboBox" RelativePanel.Below="FontSizeSettingDescription" 
                           ItemsSource="{Binding Path=FontSizes, Mode=OneWay}" SelectedItem="{Binding Path=FontSize, Mode=TwoWay}" 
                            />
-                
+
+                <TextBlock x:Name="ShowIconsAndLabelsSettingDescription" Text="Choose whether to show only icons, only labels, or icons and labels on function buttons"
+                           RelativePanel.Below="FontSizeComboBox" Style="{StaticResource SettingDescription}" />
+                <RadioButton x:Name="IconsAndLabelsRadioButton" Content="Show icons and labels" GroupName="ShowIconsAndLabelsGroup"
+                             IsChecked="{Binding Path=ValueAsIconsAndLabels, Mode=TwoWay}" 
+                             RelativePanel.Below="ShowIconsAndLabelsSettingDescription"/>
+                <RadioButton x:Name="IconsOnlyRadioButton" Content="Show icons only" GroupName="ShowIconsAndLabelsGroup"
+                             IsChecked="{Binding Path=ValueAsIconsOnly, Mode=TwoWay}"
+                             RelativePanel.Below="IconsAndLabelsRadioButton"/>
+                <RadioButton x:Name="LabelsOnlyRadioButton" Content="Show labels only" GroupName="ShowIconsAndLabelsGroup"
+                             IsChecked="{Binding Path=ValueAsLabelsOnly, Mode=TwoWay}"
+                             RelativePanel.Below="IconsOnlyRadioButton"/>
+
+
+
                 <TextBlock x:Name="AccessibilitySettingsHeader" Text="Accessibility" 
-                           RelativePanel.Below="FontSizeComboBox" Style="{StaticResource SubheaderTextBlockStyle}" />
+                           RelativePanel.Below="LabelsOnlyRadioButton" Style="{StaticResource SettingHeader}" />
                 <TextBlock x:Name="ShowShortcutsSettingDescription" Text="Show keyboard shortcuts" 
                            RelativePanel.Below="AccessibilitySettingsHeader" Style="{StaticResource SettingDescription}" />
                 <ToggleSwitch x:Name="ShowShortcutsToggle" RelativePanel.Below="ShowShortcutsSettingDescription" 

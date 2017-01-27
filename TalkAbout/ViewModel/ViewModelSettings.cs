@@ -33,7 +33,13 @@ namespace TalkAbout.ViewModel
         private bool _showNavigation;
         private bool _showSorting;
         private int _fontSize;
+        private int _voiceVolume;
+        private int _showIconsAndLabels;
         private VoiceInformation _voice;
+
+        private const int _iconsAndLabels = 1;
+        private const int _iconsOnly = 2;
+        private const int _labelsOnly = 3;
 
         public bool FilterPhrases
         {
@@ -152,6 +158,19 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public int VoiceVolume
+        {
+            get
+            {
+                return _voiceVolume;
+            }
+            set
+            {
+                SetProperty(ref _voiceVolume, value);
+                _settings.VoiceVolume = value;
+            }
+        }
+
         public VoiceInformation Voice
         {
             get
@@ -162,6 +181,58 @@ namespace TalkAbout.ViewModel
             {
                 SetProperty(ref _voice, value);
                 _settings.SettingsVoice = value;
+            }
+        }
+
+        public int ShowIconsAndLabels
+        {
+            get
+            {
+                return _showIconsAndLabels;
+            }
+            set
+            {
+                SetProperty(ref _showIconsAndLabels, value);
+                OnPropertyChanged("ValueAsIconsAndLabels");
+                OnPropertyChanged("ValueAsIconsOnly");
+                OnPropertyChanged("ValueAsLabelsOnly");
+                _settings.ShowIconsAndLabels = value;
+            }
+        }
+
+        public bool ValueAsIconsAndLabels
+        {
+            get
+            {
+                return ShowIconsAndLabels.Equals(_iconsAndLabels);
+            }
+            set
+            {
+                ShowIconsAndLabels = _iconsAndLabels;
+            }
+        }
+
+        public bool ValueAsIconsOnly
+        {
+            get
+            {
+                return ShowIconsAndLabels.Equals(_iconsOnly);
+            }
+            set
+            {
+                ShowIconsAndLabels = _iconsOnly;
+            }
+        }
+
+        public bool ValueAsLabelsOnly
+        {
+            get
+            {
+                return ShowIconsAndLabels.Equals(_labelsOnly);
+            }
+            set
+            {
+                ShowIconsAndLabels = _labelsOnly;
             }
         }
 
@@ -214,6 +285,8 @@ namespace TalkAbout.ViewModel
             _showSorting = _settings.ShowSorting;
             _fontSize = _settings.FontSize;
             _voice = _settings.SettingsVoice;
+            _voiceVolume = _settings.VoiceVolume;
+            _showIconsAndLabels = _settings.ShowIconsAndLabels;
 
             
         }

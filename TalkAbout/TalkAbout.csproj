@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Actions\PageScrollAction.cs" />
     <Compile Include="Actions\SetFocusAction.cs" />
+    <Compile Include="Actions\SpeakAction.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -120,6 +121,7 @@
     <Compile Include="ViewModel\TaskNotifier.cs" />
     <Compile Include="ViewModel\ViewModelAbbreviations.cs" />
     <Compile Include="ViewModel\ViewModelChat.cs" />
+    <Compile Include="ViewModel\ViewModelMessage.cs" />
     <Compile Include="ViewModel\ViewModelPhrase.cs" />
     <Compile Include="ViewModel\ViewModelPronunciations.cs" />
     <Compile Include="View\Abbreviations.xaml.cs">
@@ -133,6 +135,7 @@
     <Compile Include="Triggers\DeviceFamilyTrigger.cs" />
     <Compile Include="ViewModel\BindableBase.cs" />
     <Compile Include="ViewModel\ViewModelSettings.cs" />
+    <Compile Include="View\MessageTextBox.cs" />
     <Compile Include="View\Pronunciations.xaml.cs">
       <DependentUpon>Pronunciations.xaml</DependentUpon>
     </Compile>

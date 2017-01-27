@@ -19,13 +19,16 @@
                    RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                    Visibility="{x:Bind ShortcutVisible, Converter={StaticResource BoolToVisibleConverter}}"/>
         <TextBlock x:Name="Label" HorizontalAlignment="Center" Text="{Binding ElementName=ThisShortcutPanel, Path=CommandLabel}"
-                   Style="{StaticResource BodyTextBlockStyle}"
-                   RelativePanel.Above="Shortcut" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
+                   Style="{StaticResource CaptionTextBlockStyle}"
+                   RelativePanel.Above="Shortcut" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                   Visibility="{x:Bind LabelVisible, Converter={StaticResource BoolToVisibleConverter}}"/>
         <TextBlock x:Name="Icon" HorizontalAlignment="Center" VerticalAlignment="Stretch" Text="{Binding ElementName=ThisShortcutPanel, Path=SymbolText}"
-                   Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Segoe MDL2 Assets"
-                   RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Label" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
+                   Style="{StaticResource TitleTextBlockStyle}" FontFamily="Segoe MDL2 Assets" 
+                   RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Label" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                   Visibility="{x:Bind IconVisible, Converter={StaticResource BoolToVisibleConverter}}"/>
         <TextBlock x:Name="TextIcon" HorizontalAlignment="Center" VerticalAlignment="Stretch" Text="{Binding ElementName=ThisShortcutPanel, Path=PlainText}"
-                   Style="{StaticResource SubheaderTextBlockStyle}"
-                   RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Label" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
+                   Style="{StaticResource TitleTextBlockStyle}"
+                   RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Label" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                   Visibility="{x:Bind IconVisible, Converter={StaticResource BoolToVisibleConverter}}"/>
     </RelativePanel>
 </UserControl>

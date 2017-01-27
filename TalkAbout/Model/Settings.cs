@@ -39,6 +39,8 @@ namespace TalkAbout.Model
         private bool _showNavigation;
         private bool _showSorting;
         private int _fontSize;
+        private int _voiceVolume;
+        private int _showIconsAndLabels;
         private VoiceInformation _voice;
 
         //The strings for saving and retrieving the settings
@@ -52,6 +54,13 @@ namespace TalkAbout.Model
         private const string _showSortingKey = "show_sorting";
         private const string _fontSizeKey = "font_size";
         private const string _voiceKey = "voice";
+        private const string _volumeKey = "volume";
+        private const string _showIconsAndLabelsKey = "show_icons_and_labels";
+
+        //The integers to represent the state for showing icons and labels
+        private const int _iconsAndLabels = 1;
+        private const int _iconsOnly = 2;
+        private const int _labelsOnly = 3;
 
         //Properties
 
@@ -185,6 +194,32 @@ namespace TalkAbout.Model
             }
         }
 
+        public int VoiceVolume
+        {
+            get
+            {
+                return _voiceVolume;
+            }
+            set
+            {
+                _voiceVolume = value;
+                _roamingSettings.Values[_volumeKey] = value;
+            }
+        }
+
+        public int ShowIconsAndLabels
+        {
+            get
+            {
+                return _showIconsAndLabels;
+            }
+            set
+            {
+                _showIconsAndLabels = value;
+                _roamingSettings.Values[_showIconsAndLabelsKey] = value;
+            }
+        }
+
         
         /// <summary>
         /// 
@@ -299,6 +334,17 @@ namespace TalkAbout.Model
                 _fontSize = (int)fontSize;
             }
 
+            //Setting for volume.  Default is 50%.
+            object volume = _roamingSettings.Values[_volumeKey];
+            if (volume == null)
+            {
+                _voiceVolume = 50;
+            }
+            else
+            {
+                _voiceVolume = (int)volume;
+            }
+
             //Setting for voice.  Default is default system voice.
             bool found = false;
             object voiceId = _roamingSettings.Values[_voiceKey];
@@ -319,6 +365,17 @@ namespace TalkAbout.Model
             {
                 _voice = SpeechSynthesizer.AllVoices.FirstOrDefault();
                 Debug.WriteLine("Settings.cs: Voice id loaded from default is: " + _voice.Id);
+            }
+
+            //Setting for showing icons and labels.  Default is showing both icons and labels.
+            object iconsAndLabels = _roamingSettings.Values[_showIconsAndLabelsKey];
+            if (iconsAndLabels == null)
+            {
+                _showIconsAndLabels = _iconsAndLabels;
+            }
+            else
+            {
+                _showIconsAndLabels = (int)iconsAndLabels;
             }
 
         }

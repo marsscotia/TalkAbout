@@ -11,6 +11,7 @@ namespace TalkAbout.ViewModel
     {
         private Phrase _phrase;
         private Settings _settings;
+        private int _position;
 
         public string Name
         {
@@ -53,10 +54,30 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public string Shortcut
+        {
+            get
+            {
+                string result = "";
+                if (_position < 9)
+                {
+                    result = "alt + " + (_position + 1);
+                }
+                return result;
+            }
+        }
+
         public ViewModelPhrase(Phrase aPhrase)
         {
             _phrase = aPhrase;
             _settings = Settings.Instance;
+        }
+
+        public ViewModelPhrase(Phrase aPhrase, int aPosition)
+        {
+            _phrase = aPhrase;
+            _settings = Settings.Instance;
+            _position = aPosition;
         }
     }
 }

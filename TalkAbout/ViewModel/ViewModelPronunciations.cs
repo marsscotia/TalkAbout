@@ -17,6 +17,7 @@ namespace TalkAbout.ViewModel
         private string _pronunciationWord;
         private string _pronunciationSound;
         private string _error;
+        private TaskNotifier _notifier;
         private IList<Pronunciation> _selectedPronunciations;
         private Pronunciations _pronunciations;
         private ObservableCollection<Pronunciation> _pronunciationCollection;
@@ -153,6 +154,7 @@ namespace TalkAbout.ViewModel
             PronunciationWord = "";
             PronunciationSound = "";
             SelectionMode = false;
+            _notifier = new TaskNotifier(this);
             _loadPronunciations();
         }
 
@@ -251,14 +253,14 @@ namespace TalkAbout.ViewModel
 
         private void _loadPronunciations()
         {
-            TaskNotifier notifier = new TaskNotifier(_pronunciations.LoadPronunciationsFromFile(), this, "pronunciations");
+            _notifier.Execute(_pronunciations.LoadPronunciationsFromFile(), "pronunciations");
         }
 
         private void _reportError(string error)
         {
             Error = error;
             ShowError = true;
-            new TaskNotifier(Task.Delay(5000), this, "error");
+            _notifier.Execute(Task.Delay(5000), "error");
         }
 
         

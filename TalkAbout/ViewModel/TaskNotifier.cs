@@ -11,11 +11,16 @@ namespace TalkAbout.ViewModel
         private ITaskCompleteNotifier _receiver;
         private Task _task;
         private string _identifier;
+        
 
-        public TaskNotifier(Task task, ITaskCompleteNotifier receiver, string identifier)
+        public TaskNotifier(ITaskCompleteNotifier receiver)
+        {
+            _receiver = receiver;
+        }
+
+        public void Execute(Task task, string identifier)
         {
             _task = task;
-            _receiver = receiver;
             _identifier = identifier;
             if (!_task.IsCompleted)
             {
@@ -33,7 +38,6 @@ namespace TalkAbout.ViewModel
             {
             }
             _receiver.TaskComplete(task, _identifier);
-            _receiver = null;
         }
     }
 }

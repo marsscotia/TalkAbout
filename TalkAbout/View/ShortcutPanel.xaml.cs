@@ -32,6 +32,10 @@ namespace TalkAbout.View
         public static readonly DependencyProperty PlainTextProperty =
             DependencyProperty.Register("PlainText", typeof(string), typeof(ShortcutPanel), null);
 
+        private const int _iconsAndLabels = 1;
+        private const int _iconsOnly = 2;
+        private const int _labelsOnly = 3;
+
         public string CommandLabel
         {
             get
@@ -90,6 +94,42 @@ namespace TalkAbout.View
             set
             {
                 _settings.ShowShortcuts = value;
+            }
+        }
+
+        public bool IconVisible
+        {
+            get
+            {
+                bool result = true;
+                int showIconsAndLabels = _settings.ShowIconsAndLabels;
+                if (showIconsAndLabels == _iconsAndLabels || showIconsAndLabels == _iconsOnly)
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+                return result;
+            }
+        }
+
+        public bool LabelVisible
+        {
+            get
+            {
+                bool result = true;
+                int showIconsAndLabels = _settings.ShowIconsAndLabels;
+                if (showIconsAndLabels == _iconsAndLabels || showIconsAndLabels == _labelsOnly)
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+                return result;
             }
         }
 

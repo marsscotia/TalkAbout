@@ -61,5 +61,24 @@
                        FontSize="{Binding FontSize,Source={StaticResource Settings}}" />
         </StackPanel>
     </DataTemplate>
+
+    <DataTemplate x:Key="SortedPhraseTemplate">
+        <RelativePanel >
+            
+            <TextBlock x:Name="ShortcutText"
+                       RelativePanel.AlignRightWithPanel="True"
+                       Width="Auto"
+                       Text="{Binding Shortcut}"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Visibility="{Binding ShowShortcuts, Source={StaticResource Settings}, Converter={StaticResource BooleanVisibilityConverter}}"/>
+            <TextBlock x:Name="PhraseText"
+                       Text="{Binding Name}"
+                       FontSize="{Binding FontSize}"
+                       TextWrapping="Wrap"
+                       Margin="0, 0, 8, 0"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.LeftOf="ShortcutText"/>
+        </RelativePanel>
+    </DataTemplate>
     
 </ResourceDictionary>

@@ -49,6 +49,12 @@
             <behaviours:KeyUpBehaviour Key="Delete">
                 <core:InvokeCommandAction Command="{Binding DeletePronunciationsCommand}" CommandParameter="{Binding ElementName=PronunciationList, Converter={StaticResource SelectedItemsConverter}}" />
             </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="T" AndControl="True" >
+                <actions:SpeakAction TargetObject="{Binding ElementName=Media}" Utterance="{Binding PronunciationSound, Mode=OneWay}" />
+            </behaviours:KeyUpBehaviour>
+            <core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=SpeakButton}">
+                <actions:SpeakAction TargetObject="{Binding ElementName=Media}" Utterance="{Binding PronunciationSound, Mode=OneWay}" />
+            </core:EventTriggerBehavior>
         </interaction:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
@@ -78,7 +84,9 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
+        <MediaElement x:Name="Media" />
+
         <RelativePanel x:Name="ContentPanel"
                        RelativePanel.AlignLeftWithPanel="True"
                        RelativePanel.AlignRightWithPanel="True"
@@ -132,9 +140,7 @@
                 <Button x:Name="SpeakButton"
                         RelativePanel.Below="PronunciationSoundTextBox"
                         RelativePanel.LeftOf="SaveButton"
-                        Style="{StaticResource CommandButtonStyle}"
-                        Command="{Binding SpeakCommand}"
-                        CommandParameter="{Binding PronunciationSound}">
+                        Style="{StaticResource CommandButtonStyle}">
                     <local:ShortcutPanel CommandShortcut="ctrl + t" SymbolText="" />
                 </Button>
 
