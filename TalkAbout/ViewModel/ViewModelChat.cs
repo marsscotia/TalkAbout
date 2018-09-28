@@ -518,6 +518,14 @@ namespace TalkAbout.ViewModel
                 return new RelayCommand<string>(_selectPhraseByPosition);
             }
         }
+
+        public Command SpeakCommand
+        {
+            get
+            {
+                return new Command(_speak);
+            }
+        }
         
         
 
@@ -815,6 +823,11 @@ namespace TalkAbout.ViewModel
             {
                 ChatMode();
             }
+        }
+
+        private async void _speak()
+        {
+            await Speak();
         }
 
         public async Task Speak()
