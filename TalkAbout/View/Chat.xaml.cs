@@ -29,6 +29,7 @@ namespace TalkAbout
             this.InitializeComponent();
             _viewModel = new ViewModelChat();
             ChatPage.DataContext = ViewModel;
+            _viewModel.VMMessage.VoiceBox.Media = Media;
         }
 
         private ViewModelChat _viewModel;
@@ -58,5 +59,11 @@ namespace TalkAbout
             Frame root = Window.Current.Content as Frame;
             root.Navigate(typeof(Pronunciations));
         }
+
+        private void PhraseSelected(object sender, ItemClickEventArgs e)
+        {
+            ViewModel.PhraseSelected((ViewModelPhrase)e.ClickedItem);
+        }
+        
     }
 }

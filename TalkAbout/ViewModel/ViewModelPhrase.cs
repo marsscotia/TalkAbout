@@ -27,6 +27,11 @@ namespace TalkAbout.ViewModel
             {
                 return _phrase.Frequency;
             }
+            set
+            {
+                _phrase.Frequency = value;
+                OnPropertyChanged("Frequency");
+            }
             
         }
 
@@ -35,6 +40,11 @@ namespace TalkAbout.ViewModel
             get
             {
                 return _phrase.Recent;
+            }
+            set
+            {
+                _phrase.Recent = value;
+                OnPropertyChanged("Recent");
             }
         }
 
@@ -54,6 +64,19 @@ namespace TalkAbout.ViewModel
             }
         }
 
+        public int Position
+        {
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                SetProperty(ref _position, value);
+                OnPropertyChanged("Shortcut");
+            }
+        }
+
         public string Shortcut
         {
             get
@@ -62,6 +85,14 @@ namespace TalkAbout.ViewModel
                 if (_position < 9)
                 {
                     result = "alt + " + (_position + 1);
+                }
+                else if (_position == 9)
+                {
+                    result = "alt + " + 0;
+                }
+                else
+                {
+                    result = "";
                 }
                 return result;
             }

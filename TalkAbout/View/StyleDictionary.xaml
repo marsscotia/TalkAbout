@@ -29,6 +29,8 @@
     <converters:InverseBooleanHiddenConverter x:Key="BooleanHiddenConverter" />
     <converters:BooleanSelectionModeConverter x:Key="SelectionModeConverter" />
     <converters:ListViewSelectedItemsConverter x:Key="SelectedItemsConverter" />
+    <converters:ListPositionToShortcutConverter x:Key="ListShortcutConverter" />
+    <converters:NotBooleanConverter x:Key="NotConverter" />
 
     <DataTemplate x:Key="AbbreviationDataTemplate">
         <StackPanel Orientation="Vertical">
@@ -68,7 +70,7 @@
             <TextBlock x:Name="ShortcutText"
                        RelativePanel.AlignRightWithPanel="True"
                        Width="Auto"
-                       Text="{Binding Shortcut}"
+                       Text="{Binding Shortcut, Mode=OneWay}"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Visibility="{Binding ShowShortcuts, Source={StaticResource Settings}, Converter={StaticResource BooleanVisibilityConverter}}"/>
             <TextBlock x:Name="PhraseText"

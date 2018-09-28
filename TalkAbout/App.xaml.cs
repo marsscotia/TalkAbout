@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TalkAbout.View;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -62,18 +63,14 @@ namespace TalkAbout
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
+                
+                ExtendedSplash eSplash = new ExtendedSplash(e.SplashScreen, false);
+                rootFrame.Content = eSplash;
+                 
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
-            {
+            
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
@@ -83,7 +80,7 @@ namespace TalkAbout
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
-            }
+            
 
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
         }

@@ -24,11 +24,11 @@ namespace TalkAbout.ViewModel
             _identifier = identifier;
             if (!_task.IsCompleted)
             {
-                var _ = WatchTaskAsync(_task);
+                var _ = WatchTaskAsync(_task, identifier);
             }
         }
 
-        private async Task WatchTaskAsync(Task task)
+        private async Task WatchTaskAsync(Task task, string identifier)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace TalkAbout.ViewModel
             catch
             {
             }
-            _receiver.TaskComplete(task, _identifier);
+            _receiver.TaskComplete(task, identifier);
         }
     }
 }

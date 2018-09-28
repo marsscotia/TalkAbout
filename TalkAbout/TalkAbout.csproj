@@ -105,7 +105,9 @@
     <Compile Include="Converters\BooleanHiddenConverter.cs" />
     <Compile Include="Converters\BooleanSelectionModeConverter.cs" />
     <Compile Include="Converters\InverseBooleanHiddenConverter.cs" />
+    <Compile Include="Converters\ListPositionToShortcutConverter.cs" />
     <Compile Include="Converters\ListViewSelectedItemsConverter.cs" />
+    <Compile Include="Converters\NotBooleanConverter.cs" />
     <Compile Include="Data\FileAccessor.cs" />
     <Compile Include="Data\JsonConverter.cs" />
     <Compile Include="Model\Abbreviation.cs" />
@@ -120,10 +122,13 @@
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\TaskNotifier.cs" />
     <Compile Include="ViewModel\ViewModelAbbreviations.cs" />
+    <Compile Include="ViewModel\ViewModelCategories.cs" />
+    <Compile Include="ViewModel\ViewModelCategory.cs" />
     <Compile Include="ViewModel\ViewModelChat.cs" />
     <Compile Include="ViewModel\ViewModelMessage.cs" />
     <Compile Include="ViewModel\ViewModelPhrase.cs" />
     <Compile Include="ViewModel\ViewModelPronunciations.cs" />
+    <Compile Include="ViewModel\VoiceBox.cs" />
     <Compile Include="View\Abbreviations.xaml.cs">
       <DependentUpon>Abbreviations.xaml</DependentUpon>
     </Compile>
@@ -135,6 +140,9 @@
     <Compile Include="Triggers\DeviceFamilyTrigger.cs" />
     <Compile Include="ViewModel\BindableBase.cs" />
     <Compile Include="ViewModel\ViewModelSettings.cs" />
+    <Compile Include="View\ExtendedSplash.xaml.cs">
+      <DependentUpon>ExtendedSplash.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MessageTextBox.cs" />
     <Compile Include="View\Pronunciations.xaml.cs">
       <DependentUpon>Pronunciations.xaml</DependentUpon>
@@ -154,6 +162,13 @@
     <None Include="TalkAbout_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-125.png" />
+    <Content Include="Assets\SplashScreen.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -175,6 +190,10 @@
     <Page Include="View\Chat.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ExtendedSplash.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Pronunciations.xaml">
       <SubType>Designer</SubType>

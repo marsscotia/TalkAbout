@@ -248,4 +248,8 @@
     <value>Up</value>
     <comment>The label for the shortcut panel associated with the up button</comment>
   </data>
+  <data name="DefaultCategoryName" xml:space="preserve">
+    <value>Default Category</value>
+    <comment>The name for the default category for saved phrases</comment>
+  </data>
 </root>

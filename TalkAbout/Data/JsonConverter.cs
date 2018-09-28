@@ -171,6 +171,7 @@ namespace TalkAbout.Data
             bool success = JsonObject.TryParse(jsonString, out pronunicationsObject);
             if (success)
             {
+                Debug.WriteLine("JsonConverter.cs: pronunciations jsonString successfully parsed");
                 JsonArray pronunciationsArray = pronunicationsObject.GetNamedArray(_pronunciationsString);
                 for (int i = 0; i < pronunciationsArray.Count(); i++)
                 {

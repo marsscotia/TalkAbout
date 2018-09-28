@@ -11,8 +11,7 @@
     xmlns:behaviours="using:TalkAbout.Behaviours"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    NavigationCacheMode="Enabled">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -132,7 +131,7 @@
                         RelativePanel.AlignRightWith="AbbreviationPhraseTextBox"
                         Style="{StaticResource EndCommandButtonStyle}"
                         Command="{Binding AddAbbreviationCommand}">
-                    <local:ShortcutPanel  CommandShortcut="Ctrl + S" SymbolText="" />
+                    <local:ShortcutPanel  x:Uid="SaveShortcutPanel" CommandShortcut="Ctrl + S" SymbolText="" />
                 </Button>
             </RelativePanel>
 
@@ -165,7 +164,7 @@
                         RelativePanel.AlignBottomWithPanel="True"
                         Style="{StaticResource EndCommandButtonStyle}"
                         Command="{Binding ToggleSelectionModeCommand}">
-                    <local:ShortcutPanel CommandShortcut="Ctrl + l" SymbolText="" />
+                    <local:ShortcutPanel x:Uid="SelectionShortcutPanel" CommandShortcut="Ctrl + l" SymbolText="" />
                 </Button>
                 <Button x:Name="DeleteButton"
                         RelativePanel.LeftOf="SelectionModeButton"
@@ -174,7 +173,7 @@
                         Visibility="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding DeleteAbbreviationsCommand}" 
                         CommandParameter="{Binding ElementName=AbbreviationList, Converter={StaticResource SelectedItemsConverter}}">
-                    <local:ShortcutPanel CommandShortcut="Delete" SymbolText="" />
+                    <local:ShortcutPanel x:Uid="DeletePhrasesShortcutPanel" CommandShortcut="Delete" SymbolText="" />
                 </Button>
                 <Button x:Name="DownButton"
                         RelativePanel.AlignLeftWithPanel="True"
@@ -186,7 +185,7 @@
                             <actions:PageScrollAction TargetObject="{Binding ElementName=AbbreviationList}" Down="True" />
                         </core:EventTriggerBehavior>
                     </interaction:Interaction.Behaviors>
-                    <local:ShortcutPanel CommandShortcut="PgDn" SymbolText="" />
+                    <local:ShortcutPanel x:Uid="DownShortcutPanel"  CommandShortcut="PgDn" SymbolText="" />
                 </Button>
                 <Button x:Name="UpButton"
                         RelativePanel.AlignBottomWithPanel="True"
@@ -198,7 +197,7 @@
                             <actions:PageScrollAction TargetObject="{Binding ElementName=AbbreviationList}" Up="True" />
                         </core:EventTriggerBehavior>
                     </interaction:Interaction.Behaviors>
-                    <local:ShortcutPanel CommandShortcut="PgUp" SymbolText="" />
+                    <local:ShortcutPanel x:Uid="UpShortcutPanel" CommandShortcut="PgUp" SymbolText="" />
                 </Button>
             </RelativePanel>
 

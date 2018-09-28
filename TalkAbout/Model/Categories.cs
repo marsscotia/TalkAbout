@@ -21,7 +21,7 @@ namespace TalkAbout.Model
     public class Categories
     {
         private static Categories _instance;
-        private ObservableCollection<Category> _categoryList;
+        private List<Category> _categoryList;
         private JsonConverter _converter;
         private const string _filename = "categories.txt";
 
@@ -47,7 +47,7 @@ namespace TalkAbout.Model
             }
         }
 
-        public ObservableCollection<Category> CategoryList
+        public List<Category> CategoryList
         {
             get
             {
@@ -59,7 +59,7 @@ namespace TalkAbout.Model
         private Categories()
         {
             _converter = new JsonConverter();
-            _categoryList = new ObservableCollection<Category>();
+            _categoryList = new List<Category>();
 
         }
         
@@ -72,6 +72,11 @@ namespace TalkAbout.Model
                 _categoryList.Add(category);
             }
             
+        }
+
+        public void Save(int successCode)
+        {
+            _save(successCode);
         }
 
         //CRUD operations
@@ -201,6 +206,18 @@ namespace TalkAbout.Model
                     _categoryList.Remove(selected[i]);
                 }
             }
+            _save(_success);
+        }
+
+        /// <summary>
+        /// Method updates the recent and frequency fields on 
+        /// a phrase when it has been selected.
+        /// </summary>
+        /// <param name="selected"></param>
+        public void PhraseSelected(Phrase selected)
+        {
+            selected.Frequency = selected.Frequency + 1;
+            selected.Recent = DateTime.Now;
             _save(_success);
         }
 

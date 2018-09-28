@@ -21,18 +21,19 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="StyleDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        
-            
+
+
             <Storyboard x:Name="NewCategoryPanelAppear">
                 <DoubleAnimation Storyboard.TargetName="NewCategoryPanel" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
             </Storyboard>
             <CollectionViewSource x:Name="PhrasesViewSource" IsSourceGrouped="True" 
                                   Source="{Binding Phrases}" d:Source="{Binding Phrases}"/>
+            
         </ResourceDictionary>
     </Page.Resources>
 
 
-    
+
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -77,6 +78,69 @@
                 <actions:SetFocusAction TargetObject="{Binding ElementName=PhrasesList}" />
                 <actions:SetFocusAction TargetObject="{Binding ElementName=SortedPhrasesList}" />
                 <actions:SetFocusAction TargetObject="{Binding ElementName=CategoryList}" />
+            </behaviours:KeyUpBehaviour>
+            
+            <!-- Keyboard shortcuts for selecting phrases by position in list -->
+            <!-- We adjust the number sent to the command because the shorcuts are displayed 1 - 0, but the lists are 0-indexed as usual -->
+            <behaviours:KeyUpBehaviour Key="Number0" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="9" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad0" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="9" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number1" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="0" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad1" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="0" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number2" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="1" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad2" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="1" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number3" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="2" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad3" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="2" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number4" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="3" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad4" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="3" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number5" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="4" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad5" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="4" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number6" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="5" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad6" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="5" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number7" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="6" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad7" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="6" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number8" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="7" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad8" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="7" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Number9" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="8" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="NumberPad9" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="8" />
             </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
@@ -173,13 +237,13 @@
             <AppBarButton Icon="Message" Label="Pronounce" Click="AppBarButton_Click_2"/>
         </CommandBar>
 
-        
+
 
         <RelativePanel x:Name="ContentPanel" 
                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" >
 
-            
-            
+            <MediaElement x:Name="Media"  AutoPlay="False" AreTransportControlsEnabled="False"  />
+
             <!-- MessagePanel: Contains message text box and functions-->
             <RelativePanel x:Name="MessagePanel" 
                            RelativePanel.AlignLeftWithPanel="True" 
@@ -204,13 +268,10 @@
                          BindableSelectionLength="{Binding Path=SelectionLength,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{Binding Path=Enabled,Mode=OneWay}"
                          TextChanged="{x:Bind ViewModel.UpdateMessage}"
+                                      TabIndex="1"
                          >
-                   
-                    <interaction:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Loaded" >
-                            <actions:SetFocusAction TargetObject="{Binding ElementName=MessageWindow}" />
-                        </core:EventTriggerBehavior>
-                    </interaction:Interaction.Behaviors>
+
+                    
                 </views:MessageTextBox>
                 <TextBlock x:Name="MessageWindowShortcut"
                            x:Uid="MessageWindowShortcut"
@@ -221,13 +282,15 @@
                            Style="{StaticResource CaptionTextBlockStyle}" />
                 <StackPanel x:Name="MessageControlsPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" 
                             Orientation="Horizontal" >
-                    <Button x:Name="SpeakButton" Style="{StaticResource CommandButtonStyle}">
-                        <views:ShortcutPanel x:Uid="SpeakShortcutPanel" CommandShortcut="Enter" SymbolText="" />
+                    <Button x:Name="SpeakButton" Style="{StaticResource CommandButtonStyle}" Click="{x:Bind ViewModel.Speak}" >
+                        <views:ShortcutPanel x:Uid="SpeakShortcutPanel" CommandShortcut="Enter" SymbolText=""  />
                     </Button>
-                    <Button x:Name="DeleteWord" Style="{StaticResource CommandButtonStyle}">
+                    <Button x:Name="DeleteWord" Style="{StaticResource CommandButtonStyle}"
+                            Command="{Binding DeleteWordCommand}">
                         <views:ShortcutPanel x:Uid="DelWordShortcutPanel" CommandShortcut="Ctrl + W" SymbolText="" />
                     </Button>
-                    <Button x:Name="Clear" Style="{StaticResource CommandButtonStyle}">
+                    <Button x:Name="Clear" Style="{StaticResource CommandButtonStyle}"
+                            Command="{Binding ClearCommand}">
                         <views:ShortcutPanel x:Uid="ClearShortcutPanel" CommandShortcut="Ctrl + N" SymbolText="" />
                     </Button>
                     <Button x:Name="Save" Style="{StaticResource EndCommandButtonStyle}" Click="{x:Bind ViewModel.SavePhraseMode}">
@@ -236,11 +299,11 @@
                 </StackPanel>
             </RelativePanel>
 
-            
+
             <!-- PhrasesPanel: contains listviews and functions -->
             <RelativePanel x:Name="PhrasesPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                            Padding="0, 4, 0, 0">
-                
+
                 <Button x:Name="SelectionModeButton" Style="{StaticResource CommandButtonStyle}" 
                         RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" 
                         IsEnabled="{x:Bind ViewModel.SelectionModeEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ToggleSelectionMode}">
@@ -251,7 +314,7 @@
                         Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.AlignRightWithPanel="True" 
                         RelativePanel.AlignTopWithPanel="True"
-                        Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Visibility="{x:Bind ViewModel.ShowCategorySortButton, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}" 
                         CommandParameter="{Binding CategorySort}">
                     <views:ShortcutPanel x:Uid="CategoryShortcutPanel" CommandShortcut="Ctrl + g" SymbolText="" />
@@ -260,18 +323,18 @@
                 <Button x:Name="AlphabetSortButton" 
                         Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.Below="CategorySortButton" 
-                        RelativePanel.AlignRightWith="CategorySortButton"
+                        RelativePanel.AlignRightWithPanel="True"
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding AlphabetSort}">
-                       
+
                     <views:ShortcutPanel x:Uid="AlphabetShortcutPanel" CommandShortcut="Ctrl + a" PlainText="A-Z" />
                 </Button>
 
                 <Button x:Name="RecentSortButton" 
                         Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.Below="AlphabetSortButton" 
-                        RelativePanel.AlignRightWith="CategorySortButton"
+                        RelativePanel.AlignRightWithPanel="True"
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding RecentSort}">
@@ -281,7 +344,7 @@
                 <Button x:Name="FrequencySortButton" 
                         Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.Below="RecentSortButton" 
-                        RelativePanel.AlignRightWith="CategorySortButton"
+                        RelativePanel.AlignRightWithPanel="True"
                         Visibility="{x:Bind ViewModel.Settings.ShowSorting, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding SetSortCommand}"
                         CommandParameter="{Binding FrequencySort}">
@@ -291,7 +354,7 @@
                 <!-- NewCategoryPanel: contains textbox and functions for creating new category -->
                 <RelativePanel x:Name="NewCategoryPanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" 
                                RelativePanel.LeftOf="CategorySortButton" Visibility="{x:Bind ViewModel.ShowNewCategoryPanel, Converter={StaticResource BooleanVisibilityConverter}, Mode=OneWay}">
-                    
+
                     <interaction:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{Binding Visibility, ElementName=NewCategoryPanel}" Value="Visible" >
                             <actions:SetFocusAction TargetObject="{Binding ElementName=NewCategoryTextBox}" />
@@ -321,8 +384,15 @@
 
                 <Button x:Name="DeletePhrasesButton" Style="{StaticResource CommandButtonStyle}"
                         RelativePanel.LeftOf="SelectionModeButton" RelativePanel.AlignBottomWithPanel="True"
-                        Visibility="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Visibility="{x:Bind ViewModel.ShowPhrasesDeleteButton, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
                         Command="{Binding DeletePhrasesCommand}" CommandParameter="{Binding ElementName=ZoomedInList, Converter={StaticResource SelectedItemsConverter}}">
+                    <views:ShortcutPanel x:Uid="DeletePhrasesShortcutPanel" CommandShortcut="Delete" SymbolText="" />
+                </Button>
+
+                <Button x:Name="DeleteSortedPhrasesButton" Style="{StaticResource CommandButtonStyle}"
+                        RelativePanel.LeftOf="SelectionModeButton" RelativePanel.AlignBottomWithPanel="True"
+                        Visibility="{x:Bind ViewModel.ShowSortedPhrasesDeleteButton, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
+                        Command="{Binding DeletePhrasesCommand}" CommandParameter="{Binding ElementName=SortedPhrasesList, Converter={StaticResource SelectedItemsConverter}}">
                     <views:ShortcutPanel x:Uid="DeletePhrasesShortcutPanel" CommandShortcut="Delete" SymbolText="" />
                 </Button>
 
@@ -353,7 +423,8 @@
                     </Button>
 
                     <Button x:Name="BackButton" Style="{StaticResource CommandButtonStyle}" 
-                        RelativePanel.RightOf="UpButton" RelativePanel.AlignBottomWithPanel="True">
+                        RelativePanel.RightOf="UpButton" RelativePanel.AlignBottomWithPanel="True"
+                            IsEnabled="{x:Bind ViewModel.ShowPhrasesList, Mode=OneWay}">
                         <interaction:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <core:ChangePropertyAction TargetObject="{Binding ElementName=PhrasesList}" PropertyName="IsZoomedInViewActive" Value="false" />
@@ -374,28 +445,32 @@
                 <!-- PhrasesList: SemanticZoom between phrases and categories -->
                 <SemanticZoom x:Name="PhrasesList" 
                               Visibility="{Binding ShowPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
-                              RelativePanel.LeftOf="CategorySortButton" 
+                              RelativePanel.LeftOf="AlphabetSortButton" 
                               RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.Below="ListLabel"
                               Margin="0, 0, 10, 0">
                     <SemanticZoom.ZoomedInView>
                         <ListView x:Name="ZoomedInList" 
                             ItemsSource="{Binding Source={StaticResource PhrasesViewSource}}"
-                            SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource SelectionModeConverter}}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate >
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" 
-                                                   TextWrapping="Wrap" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
+                            SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay, Converter={StaticResource SelectionModeConverter}}"
+                                  ItemTemplate="{StaticResource SortedPhraseTemplate}"
+                                  SelectedItem="{Binding SelectedPhrase, Mode=TwoWay}"
+                                  IsItemClickEnabled="{Binding SelectionMode, Converter={StaticResource NotConverter}, Mode=OneWay}"
+                                  ItemClick="{x:Bind PhraseSelected}"
+                                  IsSynchronizedWithCurrentItem="False">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.GroupStyle>
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>
                                         <DataTemplate>
                                             <StackPanel>
-                                                <TextBlock Text="{Binding Key.Name}" />
+                                                <TextBlock Text="{Binding Key.Name}"
+                                                           FontSize="{Binding Key.HeaderFontSize}"
+                                                           FontWeight="Bold"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GroupStyle.HeaderTemplate>
@@ -408,7 +483,9 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding Group.Key.Name}" />
+                                        <TextBlock Text="{Binding Group.Key.Name}"
+                                                   FontSize="{Binding Group.Key.FontSize}"
+                                                   />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -417,7 +494,7 @@
                 </SemanticZoom>
 
                 <!-- CategoryList: List of categories, used when adding phrases -->
-                <ListView x:Name="CategoryList" RelativePanel.LeftOf="CategorySortButton" 
+                <ListView x:Name="CategoryList" RelativePanel.LeftOf="AlphabetSortButton" 
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="ListLabel"
                           Visibility="{Binding ShowCategoryList, Converter={StaticResource BooleanVisibilityConverter}}"
@@ -428,15 +505,16 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock Text="{Binding Name}"
+                                           FontSize="{Binding FontSize}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                
+
                 <!-- SortedPhrasesList: List of ungrouped phrases which can be sorted -->
                 <ListView x:Name="SortedPhrasesList"
-                          RelativePanel.LeftOf="CategorySortButton"
+                          RelativePanel.LeftOf="AlphabetSortButton"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="ListLabel"
                           Visibility="{Binding ShowSortedPhrasesList, Converter={StaticResource BooleanVisibilityConverter}}"
@@ -444,6 +522,9 @@
                           SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay ,Converter={StaticResource SelectionModeConverter}}"
                           Margin="0, 0, 10, 0"
                           ItemTemplate="{StaticResource SortedPhraseTemplate}"
+                          SelectedItem="{Binding SelectedSortedPhrase, Mode=TwoWay}"
+                          IsItemClickEnabled="{Binding SelectionMode, Converter={StaticResource NotConverter}, Mode=OneWay}"
+                          ItemClick="{x:Bind PhraseSelected}"
                           >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
