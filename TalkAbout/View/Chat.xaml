@@ -79,7 +79,11 @@
                 <actions:SetFocusAction TargetObject="{Binding ElementName=SortedPhrasesList}" />
                 <actions:SetFocusAction TargetObject="{Binding ElementName=CategoryList}" />
             </behaviours:KeyUpBehaviour>
-            
+            <behaviours:KeyUpBehaviour Key="N" AndControl="True">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.ClearCommand}" />
+                <actions:SetFocusAction TargetObject="{Binding ElementName=MessageWindow}" />
+            </behaviours:KeyUpBehaviour>
+
             <!-- Keyboard shortcuts for selecting phrases by position in list -->
             <!-- We adjust the number sent to the command because the shorcuts are displayed 1 - 0, but the lists are 0-indexed as usual -->
             <behaviours:KeyUpBehaviour Key="Number0" AndAlt="True">
