@@ -20,7 +20,7 @@ TalkAbout is an example of Augmentative and Alternative Communication ([AAC][1])
 TalkAbout is a work in progress.  Some possible future developments include:
 
 1. Integration with alternative synthetic voice vendors.  At the moment, TalkAbout works with the synthetic voices built into Windows 10 (note: this is not the same as SAPI5).  Integration with other vendors would allow greater choice and personalisation.
-2. History of phrases.  The ablility to recall previously spoken phrases (without having to explicitly save them) would provide further flexibility in terms of generating content.
+2. History of phrases.  The ability to recall previously spoken phrases (without having to explicitly save them) would provide further flexibility in terms of generating content.
 3. Integrated dwell select, for selecting with a pointer device without having to physically click.
 
 ## Technical details
