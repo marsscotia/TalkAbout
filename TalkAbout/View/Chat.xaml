@@ -83,6 +83,9 @@
                 <core:InvokeCommandAction Command="{x:Bind ViewModel.ClearCommand}" />
                 <actions:SetFocusAction TargetObject="{Binding ElementName=MessageWindow}" />
             </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Enter">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.SpeakCommand}" />
+            </behaviours:KeyUpBehaviour>
 
             <!-- Keyboard shortcuts for selecting phrases by position in list -->
             <!-- We adjust the number sent to the command because the shorcuts are displayed 1 - 0, but the lists are 0-indexed as usual -->
@@ -274,7 +277,11 @@
                          TextChanged="{x:Bind ViewModel.UpdateMessage}"
                                       TabIndex="1"
                          >
-
+                    <interaction:Interaction.Behaviors>
+                        <behaviours:KeyUpBehaviour Key="Enter" >
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SpeakCommand}" />
+                        </behaviours:KeyUpBehaviour>
+                    </interaction:Interaction.Behaviors>
                     
                 </views:MessageTextBox>
                 <TextBlock x:Name="MessageWindowShortcut"
