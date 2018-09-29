@@ -27,4 +27,17 @@ TalkAbout is a work in progress.  Some possible future developments include:
 
 TalkAbout is implemented in C# and XAML. 
 
+## Screenshots
+### Screenshot 1: Minimal buttons 
+The chat screen with minimal buttons, with saved phrases organised in a single list without categories.
+
+![minimum buttons][screenshot1]
+
+### Screenshot 2: All buttons on
+The chat screen with all of the buttons turned on, with saved phrases organised in categories.  Buttons and other controls are also displaying accessibility shortcuts.
+
+![all buttons][screenshot2]
+
 [1]: https://www.communicationmatters.org.uk/page/about-aac "Communication Matters: About AAC"
+[screenshot1]: screenshots/chat_min_buttons.png "The chat screen with minimal buttons"
+[screenshot2]: screenshots/chat_all_buttons.png "The chat screen with all buttons"
