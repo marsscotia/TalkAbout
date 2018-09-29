@@ -25,7 +25,13 @@ namespace TalkAbout.View
     public sealed partial class Settings : Page
     {
         
-
+        public Command GoBackCommand
+        {
+            get
+            {
+                return new Command(GoBack);
+            }
+        }
 
         public Settings()
         {
@@ -41,6 +47,16 @@ namespace TalkAbout.View
             if (root.CanGoBack)
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            }
+        }
+
+        private void GoBack()
+        {
+            Frame root = Window.Current.Content as Frame;
+
+            if (root.CanGoBack)
+            {
+                root.GoBack();
             }
         }
     }

@@ -86,6 +86,10 @@
             <behaviours:KeyUpBehaviour Key="Enter">
                 <core:InvokeCommandAction Command="{x:Bind ViewModel.SpeakCommand}" />
             </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Delete">
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.DeletePhrasesCommand}" CommandParameter="{Binding ElementName=ZoomedInList, Converter={StaticResource SelectedItemsConverter}}"/>
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.DeletePhrasesCommand}" CommandParameter="{Binding ElementName=SortedPhrasesList, Converter={StaticResource SelectedItemsConverter}}" />
+            </behaviours:KeyUpBehaviour>
 
             <!-- Keyboard shortcuts for selecting phrases by position in list -->
             <!-- We adjust the number sent to the command because the shorcuts are displayed 1 - 0, but the lists are 0-indexed as usual -->
@@ -148,6 +152,17 @@
             </behaviours:KeyUpBehaviour>
             <behaviours:KeyUpBehaviour Key="NumberPad9" AndAlt="True">
                 <core:InvokeCommandAction Command="{x:Bind ViewModel.SelectPhraseByPositionCommand}" CommandParameter="8" />
+            </behaviours:KeyUpBehaviour>
+            
+            <!-- Keyboard shortcuts for navigation to other pages -->
+            <behaviours:KeyUpBehaviour Key="S" AndAlt="True"  >
+                <core:InvokeCommandAction Command="{x:Bind NavigateToSettingsCommand}" />
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="A" AndAlt="True"  >
+                <core:InvokeCommandAction Command="{x:Bind NavigateToAbbreviationsCommand}"/>
+            </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="P" AndAlt="True" >
+                <core:InvokeCommandAction Command="{x:Bind NavigateToPronunciationsCommand}"/>
             </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
@@ -389,7 +404,16 @@
                              RelativePanel.AlignLeftWithPanel="True"  RelativePanel.AlignTopWithPanel="True"
                              PlaceholderText="Type or select a category"
                              Text="{Binding Path=NewCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                             />
+                             >
+                        <interaction:Interaction.Behaviors>
+                            <behaviours:KeyUpBehaviour Key="Enter" >
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.AddNewPhraseAndNewCategoryCommand}" />
+                            </behaviours:KeyUpBehaviour>
+                            <behaviours:KeyUpBehaviour Key="Escape">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.CancelSaveCommand}" />
+                            </behaviours:KeyUpBehaviour>
+                        </interaction:Interaction.Behaviors>
+                    </TextBox>
 
                 </RelativePanel>
 

@@ -54,6 +54,9 @@
             <behaviours:KeyUpBehaviour Key="L" AndAlt="True">
                 <actions:SetFocusAction TargetObject="{Binding ElementName=AbbreviationList}" />
             </behaviours:KeyUpBehaviour>
+            <behaviours:KeyUpBehaviour Key="Left" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind GoBackCommand}" />
+            </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
