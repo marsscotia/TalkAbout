@@ -7,6 +7,9 @@
     xmlns:voice="using:Windows.Media.SpeechSynthesis"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviours="using:TalkAbout.Behaviours"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interaction="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -35,6 +38,11 @@
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer>
             <RelativePanel x:Name="ContentPanel"   Margin="12, 0, 12, 0">
+                <interaction:Interaction.Behaviors>
+                    <behaviours:KeyUpBehaviour Key="Left" AndAlt="True" >
+                        <core:InvokeCommandAction Command="{x:Bind GoBackCommand}" />
+                    </behaviours:KeyUpBehaviour>
+                </interaction:Interaction.Behaviors>
                 
                 <TextBlock x:Name="SpeechSettingsHeader" Text="Speech" Style="{StaticResource SettingHeader}" />
                 <TextBlock x:Name="VoiceSettingDescription" Text="Choose the voice the app will speak with" 

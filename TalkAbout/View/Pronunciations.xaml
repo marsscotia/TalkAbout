@@ -54,6 +54,9 @@
             <core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=SpeakButton}">
                 <actions:SpeakAction TargetObject="{Binding ElementName=Media}" Utterance="{Binding PronunciationSound, Mode=OneWay}" />
             </core:EventTriggerBehavior>
+            <behaviours:KeyUpBehaviour Key="Left" AndAlt="True">
+                <core:InvokeCommandAction Command="{x:Bind GoBackCommand}" />
+            </behaviours:KeyUpBehaviour>
         </interaction:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>

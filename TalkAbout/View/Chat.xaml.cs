@@ -34,6 +34,30 @@ namespace TalkAbout
 
         private ViewModelChat _viewModel;
 
+        public Command NavigateToSettingsCommand
+        {
+            get
+            {
+                return new Command(NavigateToSettings);
+            }
+        }
+
+        public Command NavigateToAbbreviationsCommand
+        {
+            get
+            {
+                return new Command(NavigateToAbbreviations);
+            }
+        }
+
+        public Command NavigateToPronunciationsCommand
+        {
+            get
+            {
+                return new Command(NavigateToPronunciations);
+            }
+        }
+
         public ViewModelChat ViewModel
         {
             get
@@ -44,25 +68,43 @@ namespace TalkAbout
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame root = Window.Current.Content as Frame;
-            root.Navigate(typeof(Settings));
+            NavigateToSettings();
         }
 
         private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
         {
-            Frame root = Window.Current.Content as Frame;
-            root.Navigate(typeof(Abbreviations));
+            NavigateToAbbreviations();
         }
 
         private void AppBarButton_Click_2(object sender, RoutedEventArgs e)
         {
-            Frame root = Window.Current.Content as Frame;
-            root.Navigate(typeof(Pronunciations));
+            NavigateToPronunciations();
         }
 
         private void PhraseSelected(object sender, ItemClickEventArgs e)
         {
             ViewModel.PhraseSelected((ViewModelPhrase)e.ClickedItem);
+        }
+
+        private void NavigateToSettings()
+        {
+            NavigateTo(typeof(Settings));
+        }
+
+        private void NavigateToAbbreviations()
+        {
+            NavigateTo(typeof(Abbreviations));
+        }
+
+        private void NavigateToPronunciations()
+        {
+            NavigateTo(typeof(Pronunciations));
+        }
+
+        private void NavigateTo(Type aDestination)
+        {
+            Frame root = Window.Current.Content as Frame;
+            root.Navigate(aDestination);
         }
         
     }

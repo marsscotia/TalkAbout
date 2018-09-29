@@ -26,6 +26,14 @@ namespace TalkAbout.View
     {
         private ViewModelAbbreviations _viewModel;
 
+        public Command GoBackCommand
+        {
+            get
+            {
+                return new Command(GoBack);
+            }
+        }
+
         public ViewModelAbbreviations ViewModel
         {
             get
@@ -49,6 +57,15 @@ namespace TalkAbout.View
             if (root.CanGoBack)
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            }
+        }
+
+        private void GoBack()
+        {
+            Frame root = Window.Current.Content as Frame;
+            if (root.CanGoBack)
+            {
+                root.GoBack();
             }
         }
     }

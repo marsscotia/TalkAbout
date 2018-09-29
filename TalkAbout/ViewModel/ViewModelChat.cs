@@ -527,7 +527,15 @@ namespace TalkAbout.ViewModel
             }
         }
         
-        
+        public Command AddNewPhraseAndNewCategoryCommand
+        {
+            get
+            {
+                return new Command(AddNewPhraseAndNewCategory);
+            }
+        }
+
+
 
         #endregion Properties
 
